@@ -48,7 +48,7 @@ class Shepherd {
   }
 
   collect(straySheep){
-    let collectionDist = 10;
+    let collectionDist = 30;
     let gcm = this.herd.getGCM();
     let dir = p5.Vector.sub(straySheep.pos,gcm);
     dir.normalize(); // make a unit vector
@@ -58,7 +58,13 @@ class Shepherd {
   }
 
   drive(herd,target){
-
+    let driveDist = 50;
+    let gcm = this.herd.getGCM();
+    let dir = p5.Vector.sub(gcm,target); // dir from target to GCM
+    dir.normalize();
+    dir.setMag(driveDist);
+    let t = p5.Vector.add(gcm,dir);
+    this.seek(t);
   }
 
   // - if all sheep are within a certain distance from their global center of mass (GCM - center of flock), then shepherd will assume DRIVING position / Behavior
@@ -79,7 +85,7 @@ class Shepherd {
   crouch(){
     this.vel.mult(0);
   }
-  
+
   applyForce(f){
     this.acc.add(f);
   }
@@ -89,7 +95,7 @@ class Shepherd {
     this.vel.limit(this.maxspeed);
     this.pos.add(this.vel);
     this.acc.mult(0);
-    this.wrapAround();
+    // this.wrapAround();
   }
 
   wrapAround() {

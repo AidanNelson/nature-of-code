@@ -5,7 +5,7 @@ class Sheep{
     this.vel = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acc = createVector(0,0);
 
-    this.maxspeed = ms || 1.5;
+    this.maxspeed = ms || 2;
     this.maxforce = mf || 0.4;
   }
 
@@ -30,6 +30,7 @@ class Sheep{
     separation.mult(separationSlider.value());
     avoidShepherd.mult(avoidanceSlider.value());
     cohesion.mult(cohesionSlider.value());
+
 
     this.applyForce(graze);
     this.applyForce(separation);
@@ -149,7 +150,8 @@ class Sheep{
     this.vel.limit(this.maxspeed);
     this.pos.add(this.vel);
     this.acc.mult(0);
-    this.wrapAround();
+    this.stayWithinWalls();
+    // this.wrapAround();
   }
 
   wrapAround() {
@@ -157,6 +159,24 @@ class Sheep{
     if (this.pos.y < 0) this.pos.y = height;
     if (this.pos.x > width) this.pos.x = 0;
     if (this.pos.y > height) this.pos.y = 0;
+  }
+
+  stayWithinWalls(){
+    let border = 50;
+    let desired = createVector(0,0);
+
+    if (this.pos.x < border)  desired.add(this.maxspeed, 0);
+    if (this.pos.y < border) desired.add(0,this.maxspeed);
+    if (this.pos.x > width-border) desired.add(-this.maxspeed,0);
+    if (this.pos.y > height-border) desired.add(0,-this.maxspeed);
+
+    if (desired !== null) {
+      desired.normalize();
+      desired.mult(this.maxspeed);
+      let steer = p5.Vector.sub(desired, this.velocity);
+      steer.limit(this.maxforce);
+      this.applyForce(steer);
+    }
   }
 
   display(){
