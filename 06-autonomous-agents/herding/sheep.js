@@ -57,6 +57,8 @@ class Sheep{
     });
     // console.log('sorted neighborsDist:',neighborsDist);
 
+
+
     let neighbors = [];
     for (let i = 1; i < neighborsDist.length && i < n+1; i++){ // start at 1 b/c 0 index is ourself
       neighbors.push(neighborsDist[i].sheep);
@@ -77,7 +79,7 @@ class Sheep{
   }
 
   separate(herd){
-    let personalSpace = 2;
+    let personalSpace = 10;
     let steer = createVector(0,0);
     let count = 0;
 

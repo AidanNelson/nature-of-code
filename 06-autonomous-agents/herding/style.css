@@ -1,0 +1,17 @@
+
+.controls {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 120px;
+  color:white;
+
+  background: grey;
+  font-size: 10px;
+  line-height: 4px;
+}
+
+.controls input {
+  width: 100px;
+  height: 5px;
+}

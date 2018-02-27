@@ -13,3 +13,17 @@ Shepherd:
     - if this shepherd is within X distance from a sheep, it will not move (AKA it keeps some distance)
     - if all sheep are within a certain distance from their global center of mass (GCM - center of flock), then shepherd will assume DRIVING position / Behavior
     - if >0 sheep is > f(N) from GCM, then shepherd will assume COLLECTING position / behavior directly behind this sheep w/r/t GCM of flock
+
+
+
+Meeting w/ Dan 2/27
+
+Shepherd Logic:
+    - Re: erratic shepherd behavior: have shepherd maintain a currentSheep variable or list to hold those sheep which need to be collected.  this could be stored in some ordered list -- either by distance from the center of the pack (priority furthest to closest) OR distance from the shepherd (priority closest to furthest).
+
+    - Re: shepherd going through center of flock and splitting flock: either have shepherd avoid GCM of flock OR have sheep use obstacle avoidance to avoid center of flock OR have shepherd create bounding blob shape around flock, and always remain outside of blob.
+
+
+Sheep:
+    - Re: erratic looking behavior: this may be due in part to the use of triangles to display behavior, which shows somewhat more erratic changes in heading than is necessarily representative of actual movement.  Maybe consider not using these triangles.
+    - Re: sheep piling on top of one another: increase separation value

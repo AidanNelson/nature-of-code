@@ -1,8 +1,4 @@
-let cohesionSlider;
-let separationSlider;
-let avoidanceSlider;
-let shepherdDistanceSlider;
-let neighborsSlider;
+
 
 let dog;
 let herd;
@@ -29,13 +25,7 @@ function draw() {
 
 
 
-function setupSliders(){
-  cohesionSlider = createSlider(0,2,1.05,0.1);
-  separationSlider = createSlider(0,2,2,0.1);
-  avoidanceSlider = createSlider(0,2,1,0.1);
-  shepherdDistanceSlider = createSlider(0,200,65);
-  neighborsSlider = createSlider(0,200,20);
-}
+
 
 function mouseDragged(){
   if (keyIsPressed){ // spacebar
@@ -60,7 +50,7 @@ function debugView(){
 
   // herd gcm
   ellipse(gcm.x,gcm.y,20,20);
-  
+
   // dog's stray distance
   noFill();
   ellipse(gcm.x,gcm.y,strayDist,strayDist);
