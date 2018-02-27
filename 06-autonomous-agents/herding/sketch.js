@@ -50,25 +50,27 @@ function mouseClicked(){
 }
 
 function debugView(){
-  // DEBUG view:
   let gcm = herd.getGCM();
   let strayDist = dog.strayDistance;
   let target = dog.target;
+
   push();
   fill(255,0,0);
   stroke(255);
 
+  // herd gcm
   ellipse(gcm.x,gcm.y,20,20);
-
+  
+  // dog's stray distance
   noFill();
   ellipse(gcm.x,gcm.y,strayDist,strayDist);
 
-
+  // target
   fill(0,0,255);
   ellipse(target.x,target.y,25,25);
 
+  // borders
   let b  = 50;
-
   line(b,b,width-b,b);
   line(width-b,b,width-b,height-b);
   line(b,height-b,width-b,height-b);

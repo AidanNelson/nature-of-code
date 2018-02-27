@@ -1,5 +1,8 @@
 class Shepherd {
   constructor(x,y,herd,ms,mf){
+
+    // this.currentSheep = null;
+
     this.pos = createVector(x,y);
     this.vel = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acc = createVector(0,0);
@@ -17,6 +20,31 @@ class Shepherd {
   }
 
   run(){
+
+    // if (currentSheep == null) {
+    //   // loop and find the sheep straying the farthest
+    //   // finding current sheep could be some combination of farthest from herd and closest to me
+    //
+    //
+    //   // currentSheep = that sheep;
+    //   // curentSheep = this.findSheep();
+    // } else {
+    //   // if too close to currentSheep
+    //   // this.crouch()
+    //   // else
+    //   // this.collect(currentSheep);
+    //
+    //   // if currentSheep is close enough to center/herd/whatever
+    //   // find a new currentSheep
+    //
+    // }
+    // // OBSTACLE AVOIDANCE OF THE GCM OF THE flock
+    //
+
+
+
+    /////////////
+
     let gcm = herd.getGCM();
 
     let sheep = this.herd.sheep;

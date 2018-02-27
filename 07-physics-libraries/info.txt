@@ -1,0 +1,6 @@
+Box2D is composed of:
+    1. World
+    2. Body
+    3. Shape connected to body with ...
+    4. Fixture
+    5. Joints
