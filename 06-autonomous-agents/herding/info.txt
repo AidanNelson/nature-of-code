@@ -1,0 +1,15 @@
+Herding Behavior as modeled in “Solving the shepherding problem: heuristics for herding autonomous, interacting agents”
+
+Sheep:
+  w/r/t Shepherd:
+    - if shepherd is at a greater distance than X, sheep will pay it no mind whatsoever, but continue with grazing activities
+    - if shepherd is within Y distance, this sheep will move toward local center of mass (LCM) of its N nearest neighbors AND will be repelled directly away from shepherd
+
+  w/r/t other sheep:
+    - if another sheep is within this sheep's personal space, it will move away
+    -
+
+Shepherd:
+    - if this shepherd is within X distance from a sheep, it will not move (AKA it keeps some distance)
+    - if all sheep are within a certain distance from their global center of mass (GCM - center of flock), then shepherd will assume DRIVING position / Behavior
+    - if >0 sheep is > f(N) from GCM, then shepherd will assume COLLECTING position / behavior directly behind this sheep w/r/t GCM of flock
