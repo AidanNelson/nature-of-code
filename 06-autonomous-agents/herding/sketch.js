@@ -20,6 +20,8 @@ function setup() {
 function draw() {
   background(30);
 
+  debugView();
+
   dog.run();
   herd.run();
 }
@@ -41,4 +43,35 @@ function mouseDragged(){
   } else {
     dog.pos = createVector(mouseX,mouseY);
   }
+}
+
+function mouseClicked(){
+  dog.target = createVector(mouseX,mouseY);
+}
+
+function debugView(){
+  // DEBUG view:
+  let gcm = herd.getGCM();
+  let strayDist = dog.strayDistance;
+  let target = dog.target;
+  push();
+  fill(255,0,0);
+  stroke(255);
+
+  ellipse(gcm.x,gcm.y,20,20);
+
+  noFill();
+  ellipse(gcm.x,gcm.y,strayDist,strayDist);
+
+
+  fill(0,0,255);
+  ellipse(target.x,target.y,25,25);
+
+  let b  = 50;
+
+  line(b,b,width-b,b);
+  line(width-b,b,width-b,height-b);
+  line(b,height-b,width-b,height-b);
+  line(b,b,b,height-b);
+  pop();
 }

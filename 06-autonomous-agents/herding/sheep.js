@@ -146,12 +146,13 @@ class Sheep{
   }
 
   update(){
+    this.stayWithinWalls();
+    // this.wrapAround();
+
     this.vel.add(this.acc);
     this.vel.limit(this.maxspeed);
     this.pos.add(this.vel);
     this.acc.mult(0);
-    this.stayWithinWalls();
-    // this.wrapAround();
   }
 
   wrapAround() {

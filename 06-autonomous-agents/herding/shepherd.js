@@ -18,8 +18,6 @@ class Shepherd {
 
   run(){
     let gcm = herd.getGCM();
-    fill(255,0,0);
-    ellipse(gcm.x,gcm.y,20,20);
 
     let sheep = this.herd.sheep;
     let driveSheep = true;
