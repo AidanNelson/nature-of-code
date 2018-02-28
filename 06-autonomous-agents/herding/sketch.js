@@ -3,8 +3,10 @@
 let dog;
 let herd;
 
+setupSliders();
+
 function setup() {
-  setupSliders();
+
   createCanvas(windowWidth,windowHeight-50);
 
   herd = new Herd(50);
@@ -36,7 +38,9 @@ function mouseDragged(){
 }
 
 function mouseClicked(){
-  dog.target = createVector(mouseX,mouseY);
+  if (keyIsDown(84)) { // "t"
+    dog.target = createVector(mouseX,mouseY);
+  }
 }
 
 function debugView(){

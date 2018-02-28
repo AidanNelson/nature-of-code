@@ -44,8 +44,12 @@ class Shepherd {
 
 
 
-    /////////////
+    // update from controls
     this.strayDistance = shc.strayDistance;
+    this.crouchDistance = shc.crouchDistance;
+    this.driveDistance = shc.driveDistance;
+    this.collectDistance = shc.collectDistance;
+
     let gcm = herd.getGCM();
 
     let sheep = this.herd.sheep;
@@ -75,28 +79,22 @@ class Shepherd {
   }
 
   collect(straySheep){
-    let collectionDist = 30;
     let gcm = this.herd.getGCM();
     let dir = p5.Vector.sub(straySheep.pos,gcm);
     dir.normalize(); // make a unit vector
-    dir.setMag(collectionDist); // set distance of unit vector
+    dir.setMag(this.collectionDistance); // set distance of unit vector
     let target = p5.Vector.add(straySheep.pos,dir);
     this.seek(target);
   }
 
   drive(herd,target){
-    let driveDist = 50;
     let gcm = this.herd.getGCM();
     let dir = p5.Vector.sub(gcm,target); // dir from target to GCM
     dir.normalize();
-    dir.setMag(driveDist);
+    dir.setMag(this.driveDistance);
     let t = p5.Vector.add(gcm,dir);
     this.seek(t);
   }
-
-  // - if all sheep are within a certain distance from their global center of mass (GCM - center of flock), then shepherd will assume DRIVING position / Behavior
-
-  // - if >0 sheep is > f(N) from GCM, then shepherd will assume COLLECTING position / behavior directly behind this sheep w/r/t GCM of flock
 
   seek(target){
     let desired = p5.Vector.sub(target,this.pos);
