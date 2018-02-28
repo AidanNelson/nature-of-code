@@ -13,8 +13,6 @@ function setup() {
   dog = new Shepherd(10,10,herd);
 }
 
-
-
 function draw() {
   background(30);
 
