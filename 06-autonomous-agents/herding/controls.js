@@ -23,14 +23,14 @@ function setupSliders(){
 
   gui = new dat.GUI();
 
-  f1 = gui.addFolder('sheep controls');
+  f1 = gui.addFolder('sheep controls (h to hide)');
   gui.add(sc, 'cohesion',0,2);
   gui.add(sc, 'separation', 0,2);
   gui.add(sc, 'avoidance',0,2);
   gui.add(sc, 'detectionDistance', 0,200);
   gui.add(sc, 'nNeighbors',0,200);
 
-  f2 = gui.addFolder('shepherd controls');
+  f2 = gui.addFolder('shepherd controls  (h to hide)');
   gui.add(shc, 'strayDistance', 0,280);
   gui.add(shc, 'crouchDistance',0,200);
   gui.add(shc, 'driveDistance', 0,200);
