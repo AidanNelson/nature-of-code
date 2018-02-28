@@ -10,13 +10,14 @@ class Shepherd {
     this.maxspeed = ms || 8;
     this.maxforce = mf || 0.8;
 
-    this.stopDist = 10; // stop if closer than this
-    // sheep may stray up to this amount before collecting behavior kicks in
-    this.strayDistance = 100;
-
     this.target = createVector(300,300);
 
     this.herd = herd;
+
+    this.strayDistance = shc.strayDistance;
+    this.crouchDistance = shc.crouchDistance;
+    this.driveDistance = shc.driveDistance;
+    this.collectDistance = shc.collectDistance;
   }
 
   run(){
@@ -44,19 +45,19 @@ class Shepherd {
 
 
     /////////////
-
+    this.strayDistance = shc.strayDistance;
     let gcm = herd.getGCM();
 
     let sheep = this.herd.sheep;
     let driveSheep = true;
 
     for (let i = 0; i < sheep.length; i++){
-      if (p5.Vector.dist(this.pos,sheep[i].pos) < this.stopDist){
-        console.log("crouching");
+      if (p5.Vector.dist(this.pos,sheep[i].pos) < this.crouchDistance){
+        // console.log("crouching");
         this.crouch();
         break;
       } else if (p5.Vector.dist(sheep[i].pos,gcm) > this.strayDistance){
-        console.log("collecting stray sheep");
+        // console.log("collecting stray sheep");
         this.collect(sheep[i]);
         driveSheep = false;
         break;
@@ -64,7 +65,7 @@ class Shepherd {
     }
 
     if (driveSheep) {
-      console.log("driving this.herd to target");
+      // console.log("driving this.herd to target");
       this.drive(this.herd,this.target);
     }
 

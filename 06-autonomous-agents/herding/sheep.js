@@ -18,18 +18,18 @@ class Sheep{
     let separation = this.separate(herd); // always avoiding other sheep
     let cohesion = createVector(0,0);
 
-    if (p5.Vector.dist(this.pos,shepherd.pos) > shepherdDistanceSlider.value()){
+    if (p5.Vector.dist(this.pos,shepherd.pos) > sc.detectionDistance){
       graze.add(this.graze());
     } else { // if the threat is present
-      let neighbors = this.findNearestNeighbors(neighborsSlider.value(), herd);
+      let neighbors = this.findNearestNeighbors(sc.nNeighbors, herd);
       cohesion.add(this.cohere(neighbors,1000));
       avoidShepherd.add(this.seek(shepherd.pos).mult(-1));
     }
 
     graze.mult(1);
-    separation.mult(separationSlider.value());
-    avoidShepherd.mult(avoidanceSlider.value());
-    cohesion.mult(cohesionSlider.value());
+    separation.mult(sc.separation);
+    avoidShepherd.mult(sc.avoidance);
+    cohesion.mult(sc.cohesion);
 
 
     this.applyForce(graze);
