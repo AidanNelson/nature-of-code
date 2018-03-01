@@ -27,3 +27,11 @@ Shepherd Logic:
 Sheep:
     - Re: erratic looking behavior: this may be due in part to the use of triangles to display behavior, which shows somewhat more erratic changes in heading than is necessarily representative of actual movement.  Maybe consider not using these triangles.
     - Re: sheep piling on top of one another: increase separation value
+
+
+
+
+TODO:
+
+    - what if dog dynamically adjusted stray distance to compensate for number of sheep and number of straying sheep?  AKA if there were more straying sheep, it would try to gather the furthest first, then move them smaller.  Is this the same as adjusting for furthest sheep first?
+    

@@ -16,41 +16,51 @@ class Sheep{
 
   behaviors(herd, shepherd){
     // initialize all sheep forces
+    // dynamic forces:
     let avoidShepherd = createVector(0,0);
     let graze = createVector(0,0);
-    let separation = this.separate(herd); // always avoiding other sheep
     let cohesion = createVector(0,0);
+    // constant forces:
+    let separation = this.separate(herd);
+    let stayWithinWalls = this.stayWithinWalls();
 
-    if (p5.Vector.dist(this.pos,shepherd.pos) > sc.detectionDistance){
+
+    // check if shepherd is not close by
+    let d = p5.Vector.dist(this.pos,shepherd.pos);
+    if (d > sc.detectionDistance){
       graze.add(this.graze());
-    } else { // if the threat is present
+    } else { // else if the threat is present
       let neighbors = this.findNearestNeighbors(sc.nNeighbors, herd);
       cohesion.add(this.cohere(neighbors,1000));
       avoidShepherd.add(this.seek(shepherd.pos).mult(-1));
     }
 
+    // weight all forces before applying them
     graze.mult(1);
     separation.mult(sc.separation);
     avoidShepherd.mult(sc.avoidance);
     cohesion.mult(sc.cohesion);
 
-
+    // apply all forces
     this.applyForce(graze);
     this.applyForce(separation);
     this.applyForce(avoidShepherd);
     this.applyForce(cohesion);
   }
 
-
+  // returns n nearest other agents in an array
   findNearestNeighbors(n, herd){
     let neighborsDist = [];
+
+    // put all other agents in an array with their distance from this sheep
     for (let i in herd){
       neighborsDist.push({
         sheep: herd[i],
         dist: p5.Vector.dist(this.pos,herd[i].pos) //do this w/o sqrt?
       });
     }
-    // console.log('unsorted neighborsDist:',neighborsDist);
+
+    // sort that array by distance from this sheep, closest coming first
     neighborsDist.sort(function(a, b) {
       if (a.dist < b.dist) {
         return -1;
@@ -58,16 +68,15 @@ class Sheep{
         return 1;
       }
     });
-    // console.log('sorted neighborsDist:',neighborsDist);
 
 
-
+    // put 'n' closest sheep into an array and return that array
     let neighbors = [];
-    for (let i = 1; i < neighborsDist.length && i < n+1; i++){ // start at 1 b/c 0 index is ourself
+    // start at index 1 b/c 0 is this sheep (distance of 0 from itself)
+    for (let i = 1; i < neighborsDist.length && i < n+1; i++){
       neighbors.push(neighborsDist[i].sheep);
     }
     return neighbors;
-
   }
 
   seek(target){
@@ -76,8 +85,8 @@ class Sheep{
     desired.setMag(this.maxspeed);
 
     let steer = p5.Vector.sub(desired,this.vel);
-    steer.limit(this.maxforce);
-
+    // steer.limit(this.maxforce);
+    steer.normalize();
     return steer;
   }
 
@@ -86,9 +95,12 @@ class Sheep{
     let steer = createVector(0,0);
     let count = 0;
 
+    // loop through herd and find all sheep within personal space
     for (let i = 0; i < herd.length; i++){
       let d = p5.Vector.dist(this.pos,herd[i].pos);
 
+      // for every sheep within personal space, find vector pointing away
+      // from them and add to away vector
       if ((d>0) && (d < personalSpace)) {
         let away = p5.Vector.sub(this.pos,herd[i].pos);
         away.normalize();
@@ -98,32 +110,42 @@ class Sheep{
       }
     }
 
+    // get mean of steering forces away from sheep
     if (count>0){
-      steer.div(count); // get mean average of steering forces
+      steer.div(count);
     }
 
+    // if we have any steering force (AKA any sheep is within personal space),
+    // return desired force
     if (steer.mag() > 0) {
       steer.normalize();
       steer.mult(this.maxspeed);
       steer.sub(this.vel);
-      steer.limit(this.maxforce);
+      steer.normalize();
+      // steer.limit(this.maxforce);
     }
     return steer;
   }
 
   graze(){
-    // slow
-    let acc = this.vel.copy();
-    acc.mult(-0.02);
+    // slow down the sheep's velocity as it is no longer scared
+    let slowingForce = this.vel.copy();
+    slowingForce.mult(-0.03);
+    slowingForce.normalize();
 
-    // wander
+    // wander around (could be replaced with C Reynolds wander behavior)
+    // returns a force that is either current velocity slowed down
     if (random(1)>0.99){
-      return createVector(random(-0.5,0.5),random(-0.5,0.5));
+      let grazeForce = createVector(random(-0.5,0.5),random(-0.5,0.5));
+      grazeForce.normalize();
+      return grazeForce;
     } else {
-      return acc;
+      return slowingForce;
+      // return createVector(0,0);
     }
   }
 
+  // cohere with
   cohere(herd, d) {
     let dist = d;
     let sum = createVector(0,0);
@@ -141,7 +163,7 @@ class Sheep{
       sum.div(count);
       return this.seek(sum); // seek local center
     } else{
-      return createVector(0,0); // check against error
+      return createVector(0,0); // no force
     }
   }
 
@@ -151,7 +173,7 @@ class Sheep{
   }
 
   update(){
-    this.stayWithinWalls();
+    // this.stayWithinWalls();
     // this.wrapAround();
 
     this.vel.add(this.acc);
@@ -180,8 +202,12 @@ class Sheep{
       desired.normalize();
       desired.mult(this.maxspeed);
       let steer = p5.Vector.sub(desired, this.velocity);
-      steer.limit(this.maxforce);
-      this.applyForce(steer);
+      // steer.limit(this.maxforce);
+      // this.applyForce(steer);
+      steer.normalize();
+      return steer;
+    } else {
+      return createVector(0,0);
     }
   }
 

@@ -3,6 +3,8 @@
 let dog;
 let herd;
 
+let dog2;
+
 setupSliders();
 
 function setup() {
@@ -11,27 +13,33 @@ function setup() {
 
   herd = new Herd(50);
   dog = new Shepherd(10,10,herd);
+  dog2 = new Shepherd(10,10,herd);
+  // dog2.target = dog.target;
+  // dog2.pos = createVector(400,400);
 }
 
 function draw() {
   background(30);
 
-  let instructions = "shift-click and drag to add sheep / press 'h' to see controls"
-  textAlign(CENTER);
-  textSize(24);
-  fill(255);
-  text(instructions,width/2,30);
-
-  let explanation = "red circle is center of flock / blue circle is where dog wants sheep to go"
-  text(explanation,width/2,height-20);
+  drawText();
   debugView();
 
   dog.run();
   herd.run();
 
+  // add to shepherd class?
   switchTargets();
 }
 
+function drawText(){
+  let instructions = "shift-click and drag to add sheep / press 'h' to see controls"
+  textAlign(CENTER);
+  textSize(24);
+  fill(255);
+  text(instructions,width/2,30);
+  let explanation = "red circle is center of flock / blue circle is where dog wants sheep to go"
+  text(explanation,width/2,height-20);
+}
 
 function switchTargets(){
   let gcm = herd.getGCM()
