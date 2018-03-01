@@ -4,7 +4,7 @@ let f1,f2;
 
 function setupSliders(){
   function sheepControls() {
-    this.cohesion = 1.4;
+    this.cohesion = 1.3;
     this.separation = 1;
     this.avoidance = 1.3;
     this.detectionDistance = 100;
@@ -26,7 +26,7 @@ function setupSliders(){
   dat.GUI.toggleHide();
 
   f1 = gui.addFolder('sheep controls (h to hide)');
-  gui.add(sc, 'cohesion',0,2);
+  gui.add(sc, 'cohesion',1.0,1.5);
   gui.add(sc, 'separation', 0,2);
   gui.add(sc, 'avoidance',0,2);
   gui.add(sc, 'detectionDistance', 0,200);
