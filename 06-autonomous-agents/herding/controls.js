@@ -16,6 +16,7 @@ function setupSliders(){
     this.crouchDistance = 50;
     this.driveDistance = 50;
     this.collectDistance = 50;
+    this.avoidFlock = 1;
   };
 
   sc = new sheepControls();
@@ -35,5 +36,6 @@ function setupSliders(){
   gui.add(shc, 'crouchDistance',0,200);
   gui.add(shc, 'driveDistance', 0,200);
   gui.add(shc, 'collectDistance',0,200);
+  gui.add(shc, 'avoidFlock',0,2);
   f2.open();
 }

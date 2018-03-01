@@ -27,4 +27,10 @@ class Herd{
     }
     return gcm.div(this.sheep.length);
   }
+
+  resetColors(){
+    for (let i in this.sheep){
+      this.sheep[i].currentColor = this.sheep[i].originalColor;
+    }
+  }
 }

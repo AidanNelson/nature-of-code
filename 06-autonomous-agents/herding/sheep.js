@@ -7,14 +7,17 @@ class Sheep{
 
     this.maxspeed = ms || 2;
     this.maxforce = mf || 0.4;
+
+    this.currentColor = color(250,250,210);
+    this.originalColor = color(250,250,210);
   }
 
 
 
   behaviors(herd, shepherd){
+    // initialize all sheep forces
     let avoidShepherd = createVector(0,0);
     let graze = createVector(0,0);
-
     let separation = this.separate(herd); // always avoiding other sheep
     let cohesion = createVector(0,0);
 
@@ -188,7 +191,7 @@ class Sheep{
     let theta = this.vel.heading() + PI / 2;
     let size = 5;
     push();
-    fill(250,250,210);
+    fill(this.currentColor);
     stroke(0);
     strokeWeight(1);
     translate(this.pos.x, this.pos.y);

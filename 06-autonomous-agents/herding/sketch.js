@@ -55,11 +55,15 @@ function debugView(){
 
   // dog's stray distance
   noFill();
-  ellipse(gcm.x,gcm.y,strayDist,strayDist);
+  ellipse(gcm.x,gcm.y,2*strayDist,2*strayDist);
 
   // target
   fill(0,0,255);
   ellipse(target.x,target.y,25,25);
+
+  // set the dog's current #1 stray sheep to be red
+  herd.resetColors();
+  if (dog.straySheep[0]) dog.straySheep[0].currentColor = color(255,0,0);
 
   // borders
   let b  = 50;

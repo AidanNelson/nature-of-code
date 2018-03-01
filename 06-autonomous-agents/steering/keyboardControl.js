@@ -50,10 +50,6 @@ function keyboardControl(){
 		tz-=translationStep;
 	}
 
-	if (keyIsDown(71)){ //'g'
-		gravityOn = true;
-	}
-
 	translate(tx,ty,tz);
 	rotateX(rx);
 	rotateY(ry);
