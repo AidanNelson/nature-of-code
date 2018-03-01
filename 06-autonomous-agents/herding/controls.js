@@ -4,7 +4,7 @@ let f1,f2;
 
 function setupSliders(){
   function sheepControls() {
-    this.cohesion = 1.3;
+    this.cohesion = 1.4;
     this.separation = 1;
     this.avoidance = 1.3;
     this.detectionDistance = 100;
