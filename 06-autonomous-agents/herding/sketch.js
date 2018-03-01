@@ -16,12 +16,31 @@ function setup() {
 function draw() {
   background(30);
 
+  let instructions = "shift-click and drag to add sheep / press 'h' to see controls"
+  textAlign(CENTER);
+  textSize(24);
+  fill(255);
+  text(instructions,width/2,30);
+
+  let explanation = "red circle is center of flock / blue circle is where dog wants sheep to go"
+  text(explanation,width/2,height-20);
   debugView();
 
   dog.run();
   herd.run();
+
+  switchTargets();
 }
 
+
+function switchTargets(){
+  let gcm = herd.getGCM()
+  let d = p5.Vector.dist(dog.target, gcm);
+  if (d < 10){
+    let b = 50;
+    dog.target = createVector(random(b, width-b),random(b,height-b));
+  }
+}
 
 
 
@@ -37,8 +56,8 @@ function mouseDragged(){
 
 function mouseClicked(){
   if (keyIsDown(84)) { // "t"
-    dog.target = createVector(mouseX,mouseY);
-  }
+  dog.target = createVector(mouseX,mouseY);
+}
 }
 
 function debugView(){

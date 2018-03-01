@@ -4,25 +4,26 @@ let f1,f2;
 
 function setupSliders(){
   function sheepControls() {
-    this.cohesion = 1;
+    this.cohesion = 1.3;
     this.separation = 1;
-    this.avoidance = 1;
+    this.avoidance = 1.3;
     this.detectionDistance = 100;
-    this.nNeighbors = 10;
+    this.nNeighbors = 25;
   };
 
   function shepherdControls() {
-    this.strayDistance = 150;
+    this.strayDistance = 130;
     this.crouchDistance = 50;
-    this.driveDistance = 50;
-    this.collectDistance = 50;
-    this.avoidFlock = 1;
+    this.driveDistance = 80;
+    this.collectDistance = 80;
+    this.avoidFlock = 0.0;
   };
 
   sc = new sheepControls();
   shc = new shepherdControls();
 
   gui = new dat.GUI();
+  dat.GUI.toggleHide();
 
   f1 = gui.addFolder('sheep controls (h to hide)');
   gui.add(sc, 'cohesion',0,2);
