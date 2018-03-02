@@ -4,46 +4,130 @@ class Boid{
     this.pos = createVector(x,y);
     this.vel = createVector(random(0,1),random(0,1));
     this.acc = createVector(0,0);
-    this.maxforce = 0.02;
-    this.maxavoidforce = 0.05;
+    this.maxforce = 0.1;
+    this.maxavoidforce = 0.15;
     this.maxspeed = 2;
     this.ahead = createVector(-1,-1);
     this.ahead2 = createVector(-1,-1);
   }
 
   // https://gamedevelopment.tutsplus.com/tutorials/understanding-steering-behaviors-collision-avoidance--gamedev-7777
+  // avoidObstacles(obstacles){
+  //   // look ahead
+  //   let visionScale = 100;
+  //   let ahead = this.vel.copy();
+  //   ahead.normalize();
+  //   ahead.mult(visionScale);
+  //   ahead.add(this.pos);
+  //
+  //   let ahead2 = this.vel.copy();
+  //   ahead2.normalize();
+  //   ahead2.mult(visionScale/2);
+  //   ahead2.add(this.pos);
+  //
+  //   this.ahead = ahead.copy();
+  //   this.ahead2 = ahead2.copy();
+  //
+  //   // check for collision
+  //   let threats = [];
+  //   for (let i in obstacles){
+  //     let d = p5.Vector.dist(ahead,obstacles[i].pos);
+  //     let d2 = p5.Vector.dist(ahead2,obstacles[i].pos);
+  //
+  //     let oRadius = obstacles[i].radius;
+  //     // console.log("d: ",d,"/ orad:",oRadius);
+  //     if (d < oRadius || d2 < oRadius){
+  //       // console.log("d: ",d,"/ orad:",oRadius);
+  //       let dist = Math.min(d,d2);
+  //       threats.push({
+  //         dist: dist,
+  //         obstacle: obstacles[i]
+  //       });
+  //     }
+  //   }
+  //
+  //   threats.sort((a,b) => {
+  //     if (a.dist < b.dist){
+  //       return -1;
+  //     } else {
+  //       return 1;
+  //     }
+  //   });
+  //
+  //   if (threats.length > 0) {
+  //     // calculate avoidance force
+  //     // avoidance_force = ahead - obstacle_center
+  //     // avoidance_force = normalize(avoidance_force) * MAX_AVOID_FORCE
+  //
+  //     // let maxavoid(this.maxforce);
+  //     let threat = threats[0].obstacle;
+  //
+  //     // console.log(threat);
+  //     // basically hoping this code will find point at which ray from boid
+  //     // first makes contact with obstacle
+  //     let a = this.vel.copy();
+  //     a.normalize();
+  //
+  //     for (let i = 0; i < 100; i++) {
+  //       a.mult(1.05); // increase by 5% each time through loop
+  //       let ac = a.copy();
+  //       ac.add(this.pos);
+  //       fill(255,0,0);
+  //       ellipse(ac.x,ac.y,2,2);
+  //       let d = p5.Vector.dist(ac,threat.pos);
+  //       if (d < threat.radius) {
+  //         console.log('found first point of contact');
+  //         break;
+  //       }
+  //     }
+  //
+  //
+  //     a.add(this.pos);
+  //     let avoid = p5.Vector.sub(a,threat.pos);
+  //     avoid.normalize();
+  //     avoid.setMag(this.maxavoidforce);
+  //     this.applyForce(avoid);
+  //
+  //     // avoid obstacles
+  //   }
+
+
+  // }
+
   avoidObstacles(obstacles){
-    // look ahead
-    let visionScale = 100;
-    let ahead = this.vel.copy();
-    ahead.normalize();
-    ahead.mult(visionScale);
-    ahead.add(this.pos);
+    let visionScale = this.vel.mag()* 50;
+    let buffer = 5;
+    // until start is the same as ahead...
+    // increase it a bit in that Direction
+    // check whether the point intersects the circle
 
-    let ahead2 = this.vel.copy();
-    ahead2.normalize();
-    ahead2.mult(visionScale/2);
-    ahead2.add(this.pos);
-
-    this.ahead = ahead.copy();
-    this.ahead2 = ahead2.copy();
-
-    // check for collision
     let threats = [];
-    for (let i in obstacles){
-      let d = p5.Vector.dist(ahead,obstacles[i].pos);
-      let d2 = p5.Vector.dist(ahead2,obstacles[i].pos);
+    let dir = this.vel.copy();
+    dir.normalize();
 
-      let oRadius = obstacles[i].radius;
-      // console.log("d: ",d,"/ orad:",oRadius);
-      if (d < oRadius || d2 < oRadius){
-        // console.log("d: ",d,"/ orad:",oRadius);
-        let dist = Math.min(d,d2);
-        threats.push({
-          dist: dist,
-          obstacle: obstacles[i]
-        });
+    // trace a ray out from boid and check for collisions at each step
+    for (let i = 0; i < visionScale; i++) {
+
+      let checkPoint = dir.copy();
+      checkPoint.add(this.pos); // turn dir into position ahead of this boid
+
+      fill(255,0,0);
+      ellipse(checkPoint.x,checkPoint.y,2,2);
+
+      for (let j in obstacles){
+        let d = p5.Vector.dist(checkPoint,obstacles[j].pos);
+        if (d < obstacles[j].radius + buffer) {
+          threats.push({
+            threat: obstacles[j],
+            dist: d,
+            intersection: checkPoint
+          })
+          // console.log('found first point of contact');
+          break;
+        }
       }
+
+      dir.mult(1.05); // increase by 5% each time through loop
     }
 
     threats.sort((a,b) => {
@@ -53,47 +137,30 @@ class Boid{
         return 1;
       }
     });
-
-    if (threats.length > 0) {
-      // calculate avoidance force
-      // avoidance_force = ahead - obstacle_center
-      // avoidance_force = normalize(avoidance_force) * MAX_AVOID_FORCE
-
-      // let maxavoid(this.maxforce);
-      let threat = threats[0].obstacle;
-
-      // console.log(threat);
-      // basically hoping this code will find point at which ray from boid
-      // first makes contact with obstacle
-      let a = this.vel.copy();
-      a.normalize();
-
-      for (let i = 0; i < 100; i++) {
-        a.mult(1.05); // increase by 5% each time through loop
-        let ac = a.copy();
-        ac.add(this.pos);
-        fill(255,0,0);
-        ellipse(ac.x,ac.y,2,2);
-        let d = p5.Vector.dist(ac,threat.pos);
-        if (d < threat.radius) {
-          console.log('found first point of contact');
-          break;
-        }
+    // console.log(threats[0]);
+    if (threats[0]) {
+      let v = this.vel.copy();
+      v.normalize();
+      let cToI = p5.Vector.sub(threats[0].threat.pos,threats[0].intersection);
+      if (cToI.x < 0 || cToI.y < 0){
+        v.rotate(-HALF_PI);
+      } else{
+        v.rotate(HALF_PI); // 90 degrees to the right
       }
+      // v.add(threats[0].intersection);
+      // console.log(threats[0].dist);
+      let m = 0.01*(100-threats[0].dist);
+      console.log(m);
+      v.setMag(m);
+      v.limit(this.maxavoidforce);
+      this.applyForce(v);
 
-
-      a.add(this.pos);
-      let avoid = p5.Vector.sub(a,threat.pos);
-      avoid.normalize();
-      avoid.setMag(this.maxavoidforce);
-      this.applyForce(avoid);
-
-      // avoid obstacles
+      // let avoid = p5.Vector.sub(threats[0].intersection,threats[0].threat.pos);
+      // avoid.normalize();
+      // avoid.setMag(this.maxavoidforce);
+      // this.applyForce(avoid);
     }
-
-
   }
-
 
   flock(boids){
     let separation = this.separate(boids);

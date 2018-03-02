@@ -1,6 +1,6 @@
 let walkers = [];
 let img;
-
+let size = 0;
 function preload(){
 	img = loadImage('World_map_green.png');
 
@@ -23,9 +23,17 @@ function setup() {
 }
 
 function draw() {
-	background(255,255,255,50);
+  clear();
+	// background(255,255,255,50);
+  text(round(frameRate()),10,10);
 	for (let i = 0; i<walkers.length; i++){
-		walkers[i].work();
+		// walkers[i].work();
+    if (mouseIsPressed){
+      size +=0.5;
+      walkers[i].work(createVector(0,0), size);
+    } else {
+      size = 0;
+    }
     walkers[i].update();
   	walkers[i].render();
 	}
@@ -36,21 +44,22 @@ function draw() {
 
 class Walker {
 	constructor(x,y){
-		this.dest = createVector(x,y)
-		this.pos = createVector(floor(random(width)),floor(random(height)));
+		this.dest = createVector(x,y);
+    this.pos = createVector(x,y);
+		// this.pos = createVector(floor(random(width)),floor(random(height)));
 		this.vel = createVector();
 		this.acc = createVector();
+
 
     this.maxSpeed = 10;
     this.maxForce = 1;
 	}
 
-  work(){
-    let homewardForce = this.getHomewardForce();
-    let repulsiveForce = this.getRepulsiveForce();
-
+  work(target,size){
+    // let homewardForce = this.getHomewardForce();
+    let repulsiveForce = this.getRepulsiveForce(target, size);
     this.applyForce(repulsiveForce);
-    this.applyForce(homewardForce);
+    // this.applyForce(homewardForce);
   }
 
 	render(){
@@ -77,11 +86,11 @@ class Walker {
     return steer;
 	}
 
-  getRepulsiveForce(){
-    let mouse = createVector(mouseX,mouseY);
-    let desired = p5.Vector.sub(mouse,this.pos);
+  getRepulsiveForce(target,size){
+    // let mouse = createVector(mouseX,mouseY);
+    let desired = p5.Vector.sub(target,this.pos);
     let d = desired.mag();
-    if (d<50){
+    if (d<size){
       desired.setMag(this.maxSpeed);
       desired.mult(-1);
       let steer = p5.Vector.sub(desired,this.vel);

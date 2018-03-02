@@ -6,10 +6,14 @@ class Sheep{
     this.acc = createVector(0,0);
 
     this.maxspeed = ms || 2;
-    this.maxforce = mf || 0.4;
+    this.maxforce = mf || 0.8;
 
     this.currentColor = color(250,250,210);
     this.originalColor = color(250,250,210);
+
+    this.diameter = 10;
+
+    this.debugMode = false;
   }
 
 
@@ -25,7 +29,7 @@ class Sheep{
     let stayWithinWalls = this.stayWithinWalls();
 
 
-    // check if shepherd is not close by
+    // check if shepherd is not  close by
     let d = p5.Vector.dist(this.pos,shepherd.pos);
     if (d > sc.detectionDistance){
       graze.add(this.graze());
@@ -35,18 +39,50 @@ class Sheep{
       avoidShepherd.add(this.seek(shepherd.pos).mult(-1));
     }
 
+    if (this.debugMode){
+      console.log('avoidShepherd:',avoidShepherd.mag());
+      console.log('graze:',graze.mag());
+      console.log('cohesion:',cohesion.mag());
+      console.log('separation:',separation.mag());
+      console.log('stayWithinWalls:',stayWithinWalls.mag());
+    }
+
     // weight all forces before applying them
-    graze.mult(1);
+    graze.mult(sc.graze);
     separation.mult(sc.separation);
     avoidShepherd.mult(sc.avoidance);
     cohesion.mult(sc.cohesion);
+    stayWithinWalls.mult(sc.stayWithinWalls);
 
-    // apply all forces
-    this.applyForce(graze);
-    this.applyForce(separation);
-    this.applyForce(avoidShepherd);
-    this.applyForce(cohesion);
+    if (this.debugMode){
+      console.log('avoidShepherd:',avoidShepherd.mag());
+      console.log('graze:',graze.mag());
+      console.log('cohesion:',cohesion.mag());
+      console.log('separation:',separation.mag());
+      console.log('stayWithinWalls:',stayWithinWalls.mag());
+      this.debugMode = false;
+    }
+
+    // apply all weighted forces
+    let forceArray = [];
+    forceArray.push(graze);
+    forceArray.push(stayWithinWalls);
+    forceArray.push(separation);
+    forceArray.push(avoidShepherd);
+    forceArray.push(cohesion);
+    this.applyMultipleForces(forceArray);
   }
+
+  // will apply a full list of weighted forces, limiting the sum to maxforce
+  applyMultipleForces(forces){
+    let allForces = createVector(0,0);
+    for (let i in forces){
+      allForces.add(forces[i]);
+    }
+    allForces.limit(this.maxforce);
+    this.applyForce(allForces);
+  }
+
 
   // returns n nearest other agents in an array
   findNearestNeighbors(n, herd){
@@ -81,7 +117,6 @@ class Sheep{
 
   seek(target){
     let desired = p5.Vector.sub(target,this.pos);
-    // we would like to go as fast as possible toward the target
     desired.setMag(this.maxspeed);
 
     let steer = p5.Vector.sub(desired,this.vel);
@@ -91,7 +126,7 @@ class Sheep{
   }
 
   separate(herd){
-    let personalSpace = 10;
+    let personalSpace = this.diameter;
     let steer = createVector(0,0);
     let count = 0;
 
@@ -127,21 +162,25 @@ class Sheep{
     return steer;
   }
 
+  // slow down the sheep's velocity as it is no longer scared
   graze(){
-    // slow down the sheep's velocity as it is no longer scared
-    let slowingForce = this.vel.copy();
-    slowingForce.mult(-0.03);
-    slowingForce.normalize();
 
     // wander around (could be replaced with C Reynolds wander behavior)
     // returns a force that is either current velocity slowed down
     if (random(1)>0.99){
       let grazeForce = createVector(random(-0.5,0.5),random(-0.5,0.5));
-      grazeForce.normalize();
+      grazeForce.setMag(50);
       return grazeForce;
     } else {
+      let slowingForce = createVector(0,0);
+      // this if statement will avoid "gittering" still sheep -- if we are very
+      // close to zero speed, don't bother with slowingForce
+      if (this.vel.mag() > 0.01){
+        slowingForce = this.vel.copy();
+        slowingForce.mult(-1);
+        slowingForce.normalize();
+      }
       return slowingForce;
-      // return createVector(0,0);
     }
   }
 
@@ -177,6 +216,7 @@ class Sheep{
     // this.wrapAround();
 
     this.vel.add(this.acc);
+
     this.vel.limit(this.maxspeed);
     this.pos.add(this.vel);
     this.acc.mult(0);
@@ -228,5 +268,6 @@ class Sheep{
     vertex(size, size * 2);
     endShape(CLOSE);
     pop();
+    // ellipse(this.pos.x, this.pos.y,this.diameter,this.diameter);
   }
 }
