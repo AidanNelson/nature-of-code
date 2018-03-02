@@ -261,11 +261,13 @@ class Sheep{
   stayWithinWalls(){
     let border = 50;
     let desired = createVector(0,0);
+    // walls are -300x,300x,-300y,300y
+    let bounds = 250;
 
-    if (this.pos.x < border)  desired.add(this.maxspeed, 0);
-    if (this.pos.y < border) desired.add(0,this.maxspeed);
-    if (this.pos.x > width-border) desired.add(-this.maxspeed,0);
-    if (this.pos.y > height-border) desired.add(0,-this.maxspeed);
+    if (this.pos.x < -bounds + border)  desired.add(this.maxspeed, 0);
+    if (this.pos.y < -bounds + border) desired.add(0,this.maxspeed);
+    if (this.pos.x > bounds -border) desired.add(-this.maxspeed,0);
+    if (this.pos.y > bounds - border) desired.add(0,-this.maxspeed);
 
     if (desired !== null) {
       desired.normalize();
@@ -283,20 +285,27 @@ class Sheep{
   display(){
     // Draw a triangle rotated in the direction of velocity
     // copied from example 01
-    let theta = this.vel.heading() + PI / 2;
-    let size = 5;
-    push();
-    fill(this.currentColor);
-    stroke(0);
-    strokeWeight(1);
-    translate(this.pos.x, this.pos.y);
-    rotate(theta);
-    beginShape();
-    vertex(0, -size * 2);
-    vertex(-size, size * 2);
-    vertex(size, size * 2);
-    endShape(CLOSE);
-    pop();
+    // let theta = this.vel.heading() + PI / 2;
+    // let size = 5;
+    // push();
+    // fill(this.currentColor);
+    // stroke(0);
+    // strokeWeight(1);
+    // translate(this.pos.x, this.pos.y);
+    // rotate(theta);
+    // beginShape();
+    // vertex(0, -size * 2);
+    // vertex(-size, size * 2);
+    // vertex(size, size * 2);
+    // endShape(CLOSE);
+    // pop();
     // ellipse(this.pos.x, this.pos.y,this.diameter,this.diameter);
+
+    push();
+    rotateX(HALF_PI);
+    translate(this.pos.x, this.pos.y,1);
+    fill(0,0,255);
+    sphere(2);
+    pop();
   }
 }
