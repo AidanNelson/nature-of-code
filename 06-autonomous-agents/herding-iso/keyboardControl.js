@@ -5,6 +5,7 @@ let tz=0;
 let rx=-0.25;
 let ry=-2.15;
 let rz=0;
+let scale = 10;
 
 // turn this into an object like https://github.com/processing/p5.js/blob/master/src/webgl/interaction.js#L31
 function keyboardControl(){
@@ -13,13 +14,13 @@ function keyboardControl(){
 	let rotationStep = PI/48;
 	let translationStep = 10;
 
-	// zoom
-	if (keyIsDown(38)&& !keyIsDown(16)) {
-		ty+=translationStep;
-	}
-	if (keyIsDown(40)&& !keyIsDown(16)){
-		ty-=translationStep;
-	}
+	// // zoom
+	// if (keyIsDown(38)&& !keyIsDown(16)) {
+	// 	ty+=translationStep;
+	// }
+	// if (keyIsDown(40)&& !keyIsDown(16)){
+	// 	ty-=translationStep;
+	// }
 
 	// pan left-right
 	if (keyIsDown(37) && !keyIsDown(16)) {
@@ -46,11 +47,20 @@ function keyboardControl(){
 
 	//zoom
 	if (keyIsDown(38) && keyIsDown(18)) {
-		tz+=translationStep;
+		scale += 0.25;
+		w = width/scale;
+	  h = height/scale;
+	  proj = ortho(-w, w, h,-h, 0, 5000);
 	}
 	if (keyIsDown(40) && keyIsDown(18)){
-		tz-=translationStep;
+		scale -= 0.25;
+		w = width/scale;
+	  h = height/scale;
+	  proj = ortho(-w, w, h,-h, 0, 5000);
 	}
+
+
+
 
 	translate(tx,ty,tz);
 	rotateX(rx);

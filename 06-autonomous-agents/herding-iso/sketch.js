@@ -4,34 +4,48 @@ let herd;
 let w,h;
 let proj;
 
+let c;
+
 setupSliders();
 
 function setup() {
   createCanvas(600,400,WEBGL);
-  let scale = 2;
+  let scale = 4;
   w = width/scale;
   h = height/scale;
   proj = ortho(-w, w, h,-h, -1000, 5000);
 
+
+
+  // https://stackoverflow.com/questions/23450588/isometric-camera-with-three-js
+
+  // camera.position.set( 20, 20, 20 );
+  // camera.rotation.order = 'YXZ';
+  // camera.rotation.y = - Math.PI / 4;
+  // camera.rotation.x = Math.atan( - 1 / Math.sqrt( 2 ) );
+  // camera();
   herd = new Herd(50);
   dog = new Shepherd(10,10,herd);
 
 }
 
 function draw() {
+  keyboardControl();
   background(200);
 
   // drawText();
   // debugView();
 
 
-  keyboardControl();
+
+  drawFences(-200,-200,200,200);
   drawGround();
+  pointLight(0,200,0);
 
   dog.run();
   herd.run();
-  //
-  // // add to shepherd class?
+
+  // add to shepherd class?
   // switchTargets();
 }
 
@@ -43,7 +57,7 @@ function drawGround(){
   translate(0,0,-5);
   noStroke();
   fill(255,45,200);
-  plane(w,h);
+  plane(400,400);
   pop();
 }
 
@@ -68,7 +82,44 @@ function switchTargets(){
 }
 
 
+function drawFences(minX,minY,maxX,maxY){
+  let h = 3;
 
+  push();
+  rotateX(-HALF_PI);
+  normalMaterial();
+  // fill(255,255,0);
+  for (let i = minX; i <= maxX; i++){
+    push();
+    translate(i,minY,0);
+    drawFencePost(h);
+    pop();
+    push();
+    translate(i,maxY,0);
+    drawFencePost(h);
+    pop();
+  }
+  for (let j = minY; j <= maxY; j++){
+    push();
+    translate(minX,j,0);
+    drawFencePost(h);
+    pop();
+    push();
+    translate(maxX,j,0);
+    drawFencePost(h);
+    pop();
+  }
+pop();
+
+  function drawFencePost(h){
+    for (let i = 0; i < h; i++){
+      push();
+      translate(0,0,i);
+      box(1);
+      pop();
+    }
+  }
+}
 
 
 function mouseDragged(){

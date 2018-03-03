@@ -13,6 +13,8 @@ class Sheep{
 
     this.diameter = 10;
 
+    this.bounds = 200;
+    
     this.debugMode = false;
   }
 
@@ -262,7 +264,7 @@ class Sheep{
     let border = 50;
     let desired = createVector(0,0);
     // walls are -300x,300x,-300y,300y
-    let bounds = 250;
+    let bounds = this.bounds;
 
     if (this.pos.x < -bounds + border)  desired.add(this.maxspeed, 0);
     if (this.pos.y < -bounds + border) desired.add(0,this.maxspeed);
@@ -304,7 +306,8 @@ class Sheep{
     push();
     rotateX(HALF_PI);
     translate(this.pos.x, this.pos.y,1);
-    fill(0,0,255);
+    // fill(0,0,255);
+    normalMaterial();
     sphere(2);
     pop();
   }

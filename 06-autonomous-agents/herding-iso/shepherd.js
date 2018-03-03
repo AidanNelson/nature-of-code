@@ -185,7 +185,8 @@ class Shepherd {
 
     rotateX(HALF_PI);
     translate(this.pos.x, this.pos.y,5);
-    fill(255,0,0);
+    normalMaterial();
+    // fill(255,0,0);
     sphere(5);
     pop();
   }
