@@ -1,9 +1,9 @@
-
-
 let dog;
 let herd;
 
-let dog2;
+let dogs = [];
+let isPaused = false;
+let myFont;
 
 setupSliders();
 
@@ -11,33 +11,38 @@ function setup() {
 
   createCanvas(windowWidth,windowHeight-50);
 
-  herd = new Herd(50);
+  herd = new Herd(30);
   dog = new Shepherd(10,10,herd);
-  dog2 = new Shepherd(10,10,herd);
-  // dog2.target = dog.target;
-  // dog2.pos = createVector(400,400);
+  dogs.push(dog);
 }
 
 function draw() {
-  background(30);
+  if (!isPaused){
+    background(30);
 
-  drawText();
-  debugView();
+    drawText();
+    debugView();
 
-  dog.run();
-  herd.run();
+    dog.run();
+    herd.run();
 
-  // add to shepherd class?
-  switchTargets();
+    // add to shepherd class?
+    switchTargets();
+
+    if (keyIsDown(83)){
+      let b = 50;
+      herd.addSheep(random(b,width-b),random(b,height-b));
+    }
+  }
 }
 
 function drawText(){
-  let instructions = "shift-click and drag to add sheep / press 'h' to see controls"
+  let instructions = "Shift-click and drag to add sheep.  Press 'h' to see controls."
   textAlign(CENTER);
   textSize(24);
   fill(255);
   text(instructions,width/2,30);
-  let explanation = "red circle is center of flock / blue circle is where dog wants sheep to go"
+  let explanation = "Red circle is center of flock. Blue circle is where dog wants sheep to go."
   text(explanation,width/2,height-20);
 }
 

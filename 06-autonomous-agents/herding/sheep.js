@@ -5,8 +5,8 @@ class Sheep{
     this.vel = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acc = createVector(0,0);
 
-    this.maxspeed = ms || 2;
-    this.maxforce = mf || 0.8;
+    this.maxspeed = ms || 1.5;
+    this.maxforce = mf || 0.6;
 
     this.currentColor = color(250,250,210);
     this.originalColor = color(250,250,210);
