@@ -17,16 +17,6 @@ class PointCloudParticleSystem {
 	run(){
 		for (let particle of this.particles) {
 			particle.run();
-
-			// friction / drag from https://github.com/shiffman/The-Nature-of-Code-Examples-p5.js/blob/master/chp02_forces/NOC_2_04_forces_friction/sketch.js
-			// let c = 0.1;
-			// let normal = 1;
-			// let frictionMag = c * normal;
-			// let friction = particle.vel.copy();
-			// friction.mult(-1); // flip vel vector
-			// friction.normalize(); // reduce to 1 unit length
-			// friction.mult(frictionMag); // scale to match frictionMag above
-			// particle.applyForce(friction); //apply as force
 		}
 	}
 

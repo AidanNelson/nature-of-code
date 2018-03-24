@@ -113,7 +113,7 @@ function createParticleSystem(table){
 function setup() {
 	createCanvas(800, 400, WEBGL);
 
-	KeyboardControl.init();
+	// KeyboardControl.init();
 
 	camera(0, 0, 600, 0, 0, 0, 0, 1, 0);
 	perspective(0.8, width/height, 50, 5000);
@@ -122,8 +122,8 @@ function setup() {
 function draw() {
 	background(200);
 
-	
-	KeyboardControl.run();
+
+	// KeyboardControl.run();
 
 
 
@@ -147,6 +147,8 @@ function draw() {
 
 }
 
+
+
 function drawFloor(){
 	push();
 	let depth = width;
@@ -156,6 +158,8 @@ function drawFloor(){
 	plane(width,depth);
 	pop();
 }
+
+
 
 function drawBoundingBox(){
 	let padding = 10;
@@ -177,6 +181,7 @@ function keyboardControl(){
 	// these values can be mapped to framerate??
 	let rotationStep = PI/48;
 	let translationStep = 10;
+
 	// zoom
 	if (keyIsDown(38)&& !keyIsDown(16)) {
 		ty+=translationStep;
