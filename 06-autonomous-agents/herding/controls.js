@@ -26,7 +26,7 @@ function setupSliders(){
   shc = new shepherdControls();
 
   gui = new dat.GUI();
-  dat.GUI.toggleHide();
+//   dat.GUI.toggleHide();
 
   f1 = gui.addFolder('sheep controls (h to hide)');
   gui.add(sc, 'graze', 0.00, 0.02, 0.005);
