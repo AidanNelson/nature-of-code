@@ -20,10 +20,16 @@ Now to the interesting part:
 
 let parent = [];
 let parentFitness;
+
+let numPolygons = 100;
+let polyDimensions = 5;
 let newPolyAlpha = 50;
+
 
 let generations = [];
 let generation = 1;
+
+
 
 let sourceImg;
 
@@ -39,29 +45,24 @@ function setup() {
   let canvas = createCanvas(sourceImg.width, sourceImg.height);
   canvas.id('canvas');
 
-  pg = createGraphics(sourceImg.width, sourceImg.height);
-  pg.pixelDensity(1);
+  // pg = createGraphics(sourceImg.width, sourceImg.height);
+  // pg.pixelDensity(1);
 
   pixelDensity(1); // to make using pixels array easier later...
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < numPolygons; i++) {
 
     let poly = {
-      points: [{
-          x: floor(random(width)),
-          y: floor(random(height))
-        },
-        {
-          x: floor(random(width)),
-          y: floor(random(height))
-        },
-        {
-          x: floor(random(width)),
-          y: floor(random(height))
-        }
-      ],
+      points: [],
       col: color(floor(random(255)), floor(random(255)), floor(random(255)), newPolyAlpha)
     };
+    for (let i = 0; i < polyDimensions; i++) {
+      poly.points.push({
+        x: floor(random(width)),
+        y: floor(random(height))
+      })
+    };
+
 
     parent.push(poly);
   }
@@ -73,35 +74,46 @@ function setup() {
 }
 
 function draw() {
-  for (let i = 0; i < 10; i++) {
-    let child = reproduce(parent);
-    drawDNA(child);
+  // for (let i = 0; i < 10; i++) {
+  let child = reproduce(parent);
 
-    let childFitness = fitness(10);
+  drawDNA(child);
 
-    // lower fitness scores are better
-    if (childFitness < parentFitness) {
-      generations.push(child);
-      generation++;
-      parent = child;
-      parentFitness = childFitness;
-    }
+  let childFitness = fitness();
+
+  // lower fitness scores are better
+  if (childFitness < parentFitness) {
+    generations.push(child);
+    generation++;
+    parent = child;
+    parentFitness = childFitness;
   }
+  // }
 
   // if (generation % 10 === 0) {
-  clear();
-  image(pg, 0, 0, width, height);
+  // clear();
+  // image(pg, 0, 0, width, height);
   // }
 }
 
 function drawDNA(dna) {
-  pg.clear();
+  // pg.clear();
+  clear();
   for (let i = 0; i < dna.length; i++) {
-    pg.fill(dna[i].col);
+    fill(dna[i].col);
     // fill(0);
-    pg.noStroke();
+    noStroke();
+
     let pts = dna[i].points;
-    pg.triangle(pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y);
+
+    beginShape();
+    for (let w = 0; w < pts.length; w++) {
+      // console.log('in points');
+      vertex(pts[w].x, pts[w].y);
+    }
+    endShape(CLOSE);
+
+    // pg.triangle(pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y);
   }
 }
 
@@ -110,7 +122,7 @@ function fitness() {
   let fitness = 0;
   let step = 1;
 
-  pg.loadPixels();
+  loadPixels();
   sourceImg.loadPixels();
 
   for (let yVal = 0; yVal < height; yVal += step) {
@@ -118,10 +130,10 @@ function fitness() {
 
       let idx = 4 * (yVal * width + xVal);
       // console.log(idx);
-      let diffR = sourceImg.pixels[idx + 0] - pg.pixels[idx + 0];
-      let diffG = sourceImg.pixels[idx + 1] - pg.pixels[idx + 1];
-      let diffB = sourceImg.pixels[idx + 2] - pg.pixels[idx + 2];
-      let diffA = sourceImg.pixels[idx + 3] - pg.pixels[idx + 3];
+      let diffR = sourceImg.pixels[idx + 0] - pixels[idx + 0];
+      let diffG = sourceImg.pixels[idx + 1] - pixels[idx + 1];
+      let diffB = sourceImg.pixels[idx + 2] - pixels[idx + 2];
+      let diffA = sourceImg.pixels[idx + 3] - pixels[idx + 3];
 
       fitness += diffR * diffR + diffG * diffG + diffB * diffB + diffA * diffA;
     }
@@ -131,7 +143,7 @@ function fitness() {
 
 function reproduce(dna) {
   let child = [];
-  let morphRate = 0.005;
+  let morphRate = 0.001;
 
   for (let i = 0; i < dna.length; i++) {
 
