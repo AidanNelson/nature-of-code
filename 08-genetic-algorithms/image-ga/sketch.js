@@ -74,21 +74,21 @@ function setup() {
 }
 
 function draw() {
-  // for (let i = 0; i < 10; i++) {
-  let child = reproduce(parent);
+  for (let i = 0; i < 100; i++) {
+    let child = reproduce(parent);
 
-  drawDNA(child);
+    drawDNA(child);
 
-  let childFitness = fitness();
+    let childFitness = fitness();
 
-  // lower fitness scores are better
-  if (childFitness < parentFitness) {
-    generations.push(child);
-    generation++;
-    parent = child;
-    parentFitness = childFitness;
+    // lower fitness scores are better
+    if (childFitness < parentFitness) {
+      generations.push(child);
+      generation++;
+      parent = child;
+      parentFitness = childFitness;
+    }
   }
-  // }
 
   // if (generation % 10 === 0) {
   // clear();
