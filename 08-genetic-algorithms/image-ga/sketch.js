@@ -25,15 +25,9 @@ let numPolygons = 100;
 let polyDimensions = 5;
 let newPolyAlpha = 50;
 
-
-let generations = [];
 let generation = 1;
 
-
-
 let sourceImg;
-
-let pg;
 
 
 function preload() {
@@ -42,11 +36,8 @@ function preload() {
 
 
 function setup() {
-  let canvas = createCanvas(sourceImg.width, sourceImg.height);
-  canvas.id('canvas');
+  createCanvas(sourceImg.width, sourceImg.height);
 
-  // pg = createGraphics(sourceImg.width, sourceImg.height);
-  // pg.pixelDensity(1);
 
   pixelDensity(1); // to make using pixels array easier later...
 
@@ -66,7 +57,6 @@ function setup() {
 
     parent.push(poly);
   }
-  generations.push(parent);
 
   // draw for first time
   drawDNA(parent);
@@ -74,46 +64,34 @@ function setup() {
 }
 
 function draw() {
-  for (let i = 0; i < 100; i++) {
-    let child = reproduce(parent);
+  let child = reproduce(parent);
 
-    drawDNA(child);
+  drawDNA(child);
 
-    let childFitness = fitness();
+  let childFitness = fitness();
 
-    // lower fitness scores are better
-    if (childFitness < parentFitness) {
-      generations.push(child);
-      generation++;
-      parent = child;
-      parentFitness = childFitness;
-    }
+  // lower fitness scores are better
+  if (childFitness < parentFitness) {
+    generation++;
+    parent = child;
+    parentFitness = childFitness;
   }
 
-  // if (generation % 10 === 0) {
-  // clear();
-  // image(pg, 0, 0, width, height);
-  // }
 }
 
 function drawDNA(dna) {
-  // pg.clear();
   clear();
   for (let i = 0; i < dna.length; i++) {
     fill(dna[i].col);
-    // fill(0);
     noStroke();
 
     let pts = dna[i].points;
 
     beginShape();
     for (let w = 0; w < pts.length; w++) {
-      // console.log('in points');
       vertex(pts[w].x, pts[w].y);
     }
     endShape(CLOSE);
-
-    // pg.triangle(pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y);
   }
 }
 
@@ -181,41 +159,3 @@ function reproduce(dna) {
   }
   return child;
 }
-
-
-// function drawGenerations() {
-//   noLoop();
-//   document.getElementById('canvas').remove();
-//   let canvas = createCanvas(1000, 1000);
-//
-//   let step = generations.length / 10;
-//
-//   // let colW = 1000/step;
-//   // let colH = 1000/step;
-//
-//   let count = 0;
-//   for (let y = 0; y < 1000; y += 100) {
-//     for (let x = 0; x < 1000; x += 100) {
-//       if (count < generations.length) {
-//         let gen = generations[count];
-//         console.log(gen);
-//         let pg = createGraphics(400, 400);
-//         drawDNAonG(gen, pg);
-//         image(pg, x * 100, y * 100, 100, 100);
-//         count += 1;
-//       }
-//     }
-//   }
-// }
-//
-//
-//
-// function drawDNAonG(dna, graphicsElement) {
-//   graphicsElement.clear();
-//   for (let i = 0; i < dna.length; i++) {
-//     graphicsElement.fill(dna[i].col);
-//     graphicsElement.noStroke();
-//     let pts = dna[i].points;
-//     graphicsElement.triangle(pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y);
-//   }
-// }
