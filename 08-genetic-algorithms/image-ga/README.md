@@ -1,12 +1,16 @@
-I am trying to figure out how to adjust the mutation rate.  
+A recreation of Roger Johansson's Evolving Mona Lisa found [here](// https://rogerjohansson.blog/2008/12/07/genetic-programming-evolution-of-mona-lisa/), which uses a simple genetic algorithm to 'evolve' an image out of randomly generated / mutated polygon array.  
 
-Currently, I am iterating through the poly list, then
+From his site:
+```
+I created a small program that keeps a string of DNA for polygon rendering.
+The procedure of the program is quite simple:
 
-	iterating through the points list, then
+Setup a random DNA string  (application start)
 
-		checking whether random(1) <  morphRate
+1. Copy the current DNA sequence and mutate it slightly
+2. Use the new DNA to render polygons onto a canvas
+3. Compare the canvas to the source image
+4. If the new painting looks more like the source image than the previous painting did, then overwrite the current DNA with the new DNA
+5. Repeat from 1
 
-			morph, or don’t
-
-I think this results in my morph rate being dependent on the size of the parent list and points list.  AKA if parent list is 100 items, each with 3 points, and morph rate it 0.01, I should have 0.01 * 100 * 3 = 3 morphs.  If parent list is 500 each with 5 points, I should have 0.01 * 500 * 5 = 25 morphs.  In order to get better accuracy on the final image, I’d like to limit the morphs (at least later in the game), scaled with
-		
+```
