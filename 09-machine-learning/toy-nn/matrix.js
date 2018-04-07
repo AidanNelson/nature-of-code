@@ -128,6 +128,7 @@ class Matrix {
     }
   }
 
+  // for easier testing / debugging
   randomizeToTen() {
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
@@ -147,15 +148,6 @@ class Matrix {
     return result;
   }
 
-  map(func) {
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
-        let val = this.matrix[r][c];
-        this.matrix[r][c] = func(val);
-      }
-    }
-  }
-
   static map(m, func) {
     let result = new Matrix(m.rows, m.cols);
     for (let r = 0; r < m.rows; r++) {
@@ -166,4 +158,15 @@ class Matrix {
     }
     return result;
   }
+
+  map(func) {
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        let val = this.matrix[r][c];
+        this.matrix[r][c] = func(val);
+      }
+    }
+  }
+
+
 }
