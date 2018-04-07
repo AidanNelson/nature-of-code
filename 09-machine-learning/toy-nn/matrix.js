@@ -33,32 +33,33 @@ class Matrix {
     }
   }
 
-  // multiply(m) {
-  //   if (m instanceof Matrix) {
-  //     if (this.cols != m.rows) {
-  //       console.log("Columns of A must match rows of B!");
-  //       return undefined;
-  //     } else {
-  //       let output = new Matrix(this.rows, m.cols);
-  //       for (let r = 0; r < this.rows; r++) {
-  //         for (let c = 0; c < m.cols; c++) {
-  //           let dotProduct = 0;
-  //           for (let z = 0; z < this.cols; z++) {
-  //             dotProduct += this.matrix[r][z] * m.matrix[z][c];
-  //           }
-  //           output.matrix[r][c] = dotProduct;
-  //         }
-  //       }
-  //       return output;
-  //     }
-  //   } else {
-  //     for (let i = 0; i < this.rows; i++) {
-  //       for (let j = 0; j < this.cols; j++) {
-  //         this.matrix[i][j] *= m;
-  //       }
-  //     }
-  //   }
-  // }
+  multiply(m) {
+    if (m instanceof Matrix) {
+      if (this.cols != m.rows) {
+        console.log('non static multiply function');
+        console.log("Columns of A must match rows of B!");
+        return undefined;
+      } else {
+        let output = new Matrix(this.rows, m.cols);
+        for (let r = 0; r < this.rows; r++) {
+          for (let c = 0; c < m.cols; c++) {
+            let dotProduct = 0;
+            for (let z = 0; z < this.cols; z++) {
+              dotProduct += this.matrix[r][z] * m.matrix[z][c];
+            }
+            output.matrix[r][c] = dotProduct;
+          }
+        }
+        return output;
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        for (let j = 0; j < this.cols; j++) {
+          this.matrix[i][j] *= m;
+        }
+      }
+    }
+  }
 
 
   add(n) {

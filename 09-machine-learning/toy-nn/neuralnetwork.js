@@ -59,8 +59,8 @@ class NeuralNetwork {
     // calculate deltas for weights
     let hidden_t = Matrix.transpose(hidden);
 
-    console.table(gradients.matrix);
-    console.table(hidden_t.matrix);
+    console.log(gradients);
+    console.log(hidden_t);
 
     let weight_ho_deltas = Matrix.multiply(gradients, hidden_t);
 
