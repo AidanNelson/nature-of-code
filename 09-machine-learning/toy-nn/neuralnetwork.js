@@ -115,7 +115,7 @@ window.onload = function() {
 
   nn.train(inputs, targets);
 
-  // testMatrices();
+  testMatrices();
 }
 
 
@@ -131,14 +131,16 @@ function testMatrices() {
   m1.randomizeToTen();
   m2.randomizeToTen();
 
+  console.log("M1:");
   console.table(m1.matrix);
+  console.log("M2:");
   console.table(m2.matrix);
 
   console.log("M1 dot M2:");
   let out = m1.multiply(m2);
   console.table(out.matrix);
 
-  console.log("TRANSPOSE:");
+  console.log("TRANSPOSED:");
   let transposed = Matrix.transpose(out);
   console.table(transposed.matrix);
 
@@ -157,4 +159,11 @@ function testMatrices() {
   }
   transposed.map(moduloFive);
   console.table(transposed.matrix);
+
+  console.log("Static Matrix Multiplication");
+  let output = Matrix.multiply(transposed, m1);
+  console.table(output.matrix);
+
+
+
 }

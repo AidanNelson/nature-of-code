@@ -16,6 +16,7 @@ class Matrix {
 
   static multiply(a, b) {
     if (a.cols != b.rows) {
+      console.log("static method");
       console.log("Columns of A must match rows of B!");
       return undefined;
     } else {
