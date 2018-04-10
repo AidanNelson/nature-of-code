@@ -22,6 +22,14 @@ class NeuralNetwork {
     this.learning_rate = 0.1;
   }
 
+  useDNA(dna) {
+    this.weights_ih = dna[0];
+    this.weights_ho = dna[1];
+
+    this.bias_h = dna[2];
+    this.bias_o = dna[3];
+  }
+
   feedForward(input_matrix) {
     let hidden = Matrix.multiply(this.weights_ih, input_matrix);
     hidden.add(this.bias_h);
@@ -89,97 +97,4 @@ function sigmoid(x) {
 
 function dsigmoid(y) {
   return (y * (1 - y)); // assumes y has already passed through sigmoid
-}
-
-
-
-
-let xor_training_data = [{
-    input: [0, 1],
-    target: [1]
-  },
-  {
-    input: [1, 0],
-    target: [1]
-  },
-  {
-    input: [1, 1],
-    target: [0]
-  },
-  {
-    input: [0, 0],
-    target: [0]
-  }
-];
-
-
-
-
-window.onload = function() {
-
-  let nn = new NeuralNetwork(2, 3, 1);
-
-  // training XOR
-  for (let i = 0; i < 50000; i++) {
-    let index = Math.floor(Math.random() * 4);
-    let inputs = Matrix.fromArray(xor_training_data[index].input);
-    let targets = Matrix.fromArray(xor_training_data[index].target);
-
-    nn.train(inputs, targets);
-  }
-
-  for (let i = 0; i < xor_training_data.length; i++) {
-    let inputs = Matrix.fromArray(xor_training_data[i].input);
-    console.table(inputs.matrix);
-    let result = nn.feedForward(inputs);
-    console.table(result.matrix);
-  }
-  // testMatrices();
-}
-
-
-
-
-
-
-
-function testMatrices() {
-  let m1 = new Matrix(2, 1);
-  let m2 = new Matrix(1, 2);
-
-  m1.randomizeToTen();
-  m2.randomizeToTen();
-
-  console.log("M1:");
-  console.table(m1.matrix);
-  console.log("M2:");
-  console.table(m2.matrix);
-
-  console.log("M1 dot M2:");
-  let out = m1.multiply(m2);
-  console.table(out.matrix);
-
-  console.log("TRANSPOSED:");
-  let transposed = Matrix.transpose(out);
-  console.table(transposed.matrix);
-
-  console.log("ADDING 2:");
-  transposed.add(2);
-  console.table(transposed.matrix);
-
-  // console.log("SUBTRACTING 5:");
-  // transposed.subtract(5);
-  // console.table(transposed.matrix);
-
-  console.log("MAPPING A FUNCTION (MODULO 5):");
-
-  function moduloFive(i) {
-    return i % 5;
-  }
-  transposed.map(moduloFive);
-  console.table(transposed.matrix);
-
-  console.log("Static Matrix Multiplication");
-  let output = Matrix.multiply(transposed, m1);
-  console.table(output.matrix);
 }
