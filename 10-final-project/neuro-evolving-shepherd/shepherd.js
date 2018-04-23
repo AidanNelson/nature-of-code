@@ -40,7 +40,6 @@ class Shepherd {
   run() {
     this.think();
     this.update();
-    // this.display();
 
     this.herd.run(this);
 

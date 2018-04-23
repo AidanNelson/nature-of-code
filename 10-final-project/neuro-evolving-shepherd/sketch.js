@@ -1,14 +1,11 @@
-let dog;
-let herd;
-
 let population = [];
 
-let gen = 0
+let generationNumber = 0
+
 setupSliders();
 
 function setup() {
-
-  createCanvas(windowWidth, windowHeight - 50);
+  createCanvas(windowWidth - 50, windowHeight - 50);
 
   for (let i = 0; i < 20; i++) {
     let c = color(random(50, 250), random(50, 250), random(50, 250));
@@ -29,7 +26,7 @@ function draw() {
   textSize(22);
   textAlign(LEFT);
   fill(255);
-  let info = 'generation:' + gen;
+  let info = 'generation:' + generationNumber;
   text(info, 25, 50);
 
   for (let c = 0; c < sys.simulationSpeed; c++) {
@@ -91,7 +88,7 @@ function draw() {
 
 
 function nextGeneration() {
-  gen++;
+  generationNumber++;
   population.sort((a, b) => {
     if (a.fitness < b.fitness) {
       return -1;
@@ -127,6 +124,6 @@ function nextGeneration() {
     let parent = matingPool[floor(random(matingPool.length))];
     nextGeneration.push(parent.clone());
   }
-  console.log('Generation: ', gen);
+  console.log('Generation: ', generationNumber);
   population = nextGeneration;
 }

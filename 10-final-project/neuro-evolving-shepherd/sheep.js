@@ -5,7 +5,7 @@ class Sheep {
     this.acc = createVector(0, 0);
 
     this.maxspeed = 0;
-    this.maxforce = 0.6;
+    this.maxforce = 0;
 
     this.currentColor = col;
     this.originalColor = col;
@@ -283,7 +283,7 @@ class Sheep {
     // Draw a triangle rotated in the direction of velocity
     // copied from example 01
     let theta = this.vel.heading() + PI / 2;
-    let size = 2;
+    let size = 4;
     push();
     fill(this.currentColor);
     stroke(0);

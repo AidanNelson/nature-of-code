@@ -1,6 +1,6 @@
-let sc, shc;
+let sc, shc, sys;
 let gui;
-let f1, f2;
+let f1, f2, f3;
 
 function setupSliders() {
   function sheepControls() {
@@ -14,20 +14,21 @@ function setupSliders() {
     this.nNeighbors = 25;
   };
 
-  function shepherdControls() {
-    this.strayDistance = 130;
-    this.crouchDistance = 50;
-    this.driveDistance = 80;
-    this.collectDistance = 80;
-    this.avoidFlock = 0.1;
-  };
+  //
+  // function shepherdControls() {
+  //   this.strayDistance = 130;
+  //   this.crouchDistance = 50;
+  //   this.driveDistance = 80;
+  //   this.collectDistance = 80;
+  //   this.avoidFlock = 0.1;
+  // };
 
   function systemControls() {
     this.simulationSpeed = 1;
     this.generationLength = 250;
   }
   sc = new sheepControls();
-  shc = new shepherdControls();
+  // shc = new shepherdControls();
   sys = new systemControls();
   gui = new dat.GUI();
   // dat.GUI.toggleHide();
