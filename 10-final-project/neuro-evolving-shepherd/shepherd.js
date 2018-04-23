@@ -16,10 +16,13 @@ class Shepherd {
     this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
 
-    this.maxspeed = 4;
+    this.maxspeed = 2;
     this.maxforce = 0.1;
 
     this.fitness = -1;
+
+    this.health = 1;
+    this.score = 0;
 
     this.col = col;
     this.herd = new Herd(1, this.col, this); // herd of 1 sheep
@@ -33,6 +36,7 @@ class Shepherd {
     }
   }
 
+
   run() {
     this.think();
     this.update();
@@ -40,7 +44,16 @@ class Shepherd {
 
     this.herd.run(this);
 
+    this.health -= 0.005;
+
     this.fitness = this.getFitness();
+
+    // let gcm = this.herd.getGCM();
+    // let d = p5.Vector.dist(this.pos, gcm);
+    // if (d < 100) {
+    //   this.score++;
+    //   this.health + 1;
+    // }
   }
 
   show() {
@@ -48,12 +61,26 @@ class Shepherd {
     this.herd.show();
   }
 
+  isDead() {
+    return this.health < 0;
+  }
 
   clone() {
     let newBrain = this.brain.copy();
     newBrain.mutate(mutate);
     let c = color(random(50, 250), random(50, 250), random(50, 250));
     return new Shepherd(c, newBrain);
+  }
+
+  // Make a copy of this vehicle according to probability
+  maybeClone(prob) {
+    // Pick a random number
+    let r = random(1);
+    if (r < prob) {
+      // New vehicle with brain copy
+      return new Vehicle(this.brain);
+    }
+    // otherwise will return undefined
   }
 
   getFitness() {
@@ -79,14 +106,14 @@ class Shepherd {
     //   inputArray.push(map(this.herd.sheep[i].pos.y, 0, height, 0, 1));
     // }
 
-    inputArray.push(map(this.pos.x, 0, width, 0, 1));
-    inputArray.push(map(this.pos.y, 0, height, 0, 1));
+    inputArray.push(constrain(map(this.pos.x, 0, width, 0, 1), 0, 1));
+    inputArray.push(constrain(map(this.pos.y, 0, height, 0, 1), 0, 1));
 
-    inputArray.push(map(this.vel.x, 0, this.maxspeed, 0, 1));
-    inputArray.push(map(this.vel.y, 0, this.maxspeed, 0, 1));
+    inputArray.push(this.vel.x / this.maxspeed);
+    inputArray.push(this.vel.y / this.maxspeed);
 
-    inputArray.push(map(gcm.x, 0, width, 0, 1));
-    inputArray.push(map(gcm.y, 0, height, 0, 1));
+    inputArray.push(constrain(map(gcm.x, 0, width, 0, 1), 0, 1));
+    inputArray.push(constrain(map(gcm.y, 0, height, 0, 1), 0, 1));
 
     let outputs = this.brain.predict(inputArray);
 

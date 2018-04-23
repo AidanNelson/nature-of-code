@@ -9,3 +9,6 @@ Steps required:
 [ ] - shepherd will move according to output of NN brain
 [ ] - order population of shepherds by fitness
 [ ] - create next generation of shepherds / herds
+
+links:
+http://blog.otoro.net/2017/10/29/visual-evolution-strategies/
