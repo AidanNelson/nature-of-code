@@ -14,6 +14,7 @@ function setupSliders() {
     this.nNeighbors = 25;
   };
 
+
   //
   // function shepherdControls() {
   //   this.strayDistance = 130;
