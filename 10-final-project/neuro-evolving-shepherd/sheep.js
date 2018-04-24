@@ -240,7 +240,7 @@ class Sheep {
   }
 
   update() {
-    // this.stayWithinWalls();
+    this.stayWithinWalls();
     // this.wrapAround();
 
     this.vel.add(this.acc);

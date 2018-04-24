@@ -1,13 +1,14 @@
 let population = [];
-
 let generationNumber = 0
+let cyclesSinceLastGeneration = 0;
 
 setupSliders();
 
 function setup() {
   createCanvas(windowWidth - 50, windowHeight - 50);
 
-  for (let i = 0; i < 20; i++) {
+  // create initial population
+  for (let i = 0; i < sys.populationSize; i++) {
     let c = color(random(50, 250), random(50, 250), random(50, 250));
     let shepherd = new Shepherd(c);
     population.push(shepherd);
@@ -16,25 +17,14 @@ function setup() {
 
 
 
-
-let cyclesSinceLastGeneration = 0;
-// let cycles = 1;
-let cyclesPerGen = 500;
-
 function draw() {
   background(30);
-  textSize(22);
-  textAlign(LEFT);
-  fill(255);
-  let info = 'generation:' + generationNumber;
-  text(info, 25, 50);
+  drawGenerationNumber();
+
 
   for (let c = 0; c < sys.simulationSpeed; c++) {
     for (let i = population.length - 1; i >= 0; i--) {
       population[i].run();
-      // if (population[i].isDead()) {
-      //   population.splice(i, 1);
-      // }
     }
 
     // next generation!
@@ -44,48 +34,44 @@ function draw() {
     }
 
     cyclesSinceLastGeneration++;
-
-
-    // if (population.length < 20) {
-    //   for (let dog of population) {
-    //     // Every vehicle has a chance of cloning itself according to score
-    //     // Argument to "clone" is probability
-    //     let newDog = dog.maybeClone(0.1 * v.score / record);
-    //     // If there is a child
-    //     if (newDog != null) {
-    //       population.push(newDog);
-    //     }
-    //   }
-    // }
-  }
-  for (let i = 0; i < population.length; i++) {
-    population[i].show();
-    if (mouseIsPressed) {
-      let d = dist(mouseX, mouseY, population[i].pos.x, population[i].pos.y);
-      if (d < 30) {
-        fill(255, 255, 255, 100);
-        stroke(0);
-        let gcm = population[i].herd.getGCM();
-        ellipse(gcm.x, gcm.y, 30, 30);
-      }
-    }
   }
 
+  displayPopulation();
 }
 
-// function mousePressed() {
-//   console.log('ok');
-//   for (let i = 0; i < population.length; i++) {
-//     let d = dist(mouseX, mouseY, population[i].pos.x, population[i].pos.y);
-//     if (d < 30) {
-//       fill(255, 255, 255, 80);
-//       stroke(0);
-//       let gcm = population[i].herd.getGCM();
-//       ellipse(gcm.x, gcm.y, 10, 10);
-//     }
-//   }
-// }
 
+function drawGenerationNumber() {
+  if (sys.debugMode) {
+    textSize(22);
+    textAlign(LEFT);
+    fill(255);
+    let info = 'generation:' + generationNumber;
+    text(info, 25, 50);
+  }
+}
+
+function displayPopulation() {
+  for (let i = 0; i < population.length; i++) {
+    population[i].show();
+    // in debug mode, show gcm of herd of sheep under mouse
+    if (sys.debugMode) {
+      let p1 = population[i].pos;
+      let p2 = population[i].herd.getGCM();
+      stroke(255, 255, 255, 100);
+      strokeWeight(1);
+      line(p1.x, p1.y, p2.x, p2.y);
+      // if (mouseIsPressed) {
+      //   let d = dist(mouseX, mouseY, population[i].pos.x, population[i].pos.y);
+      //   if (d < 30) {
+      //     fill(255, 255, 255, 100);
+      //     stroke(0);
+      //     let gcm = population[i].herd.getGCM();
+      //     ellipse(gcm.x, gcm.y, 30, 30);
+      //   }
+      // }
+    }
+  }
+}
 
 function nextGeneration() {
   generationNumber++;
@@ -102,12 +88,13 @@ function nextGeneration() {
 
   let maxFitness = population[0].fitness;
   let minFitness = population[population.length - 1].fitness;
-  // console.log('max fitness:', maxFitness);
-  let total = 0;
-  for (let i = 0; i < population.length; i++) {
-    total += population[i].fitness;
-  }
-  console.log('avg fitness:', total / population.length);
+
+  // let total = 0;
+  // for (let i = 0; i < population.length; i++) {
+  //   total += population[i].fitness;
+  // }
+  // console.log('avg fitness:', total / population.length);
+
   for (let i = 0; i < population.length; i++) {
     let fitnessNormal = map(population[i].fitness, 0, minFitness, 1, 0);
     // console.log(fitnessNormal);
@@ -120,10 +107,30 @@ function nextGeneration() {
 
 
 
-  for (let i = 0; i < population.length; i++) {
+  for (let i = 0; i < sys.populationSize; i++) {
     let parent = matingPool[floor(random(matingPool.length))];
     nextGeneration.push(parent.clone());
   }
   console.log('Generation: ', generationNumber);
   population = nextGeneration;
 }
+
+
+
+
+
+
+
+
+
+// if (population.length < 20) {
+//   for (let dog of population) {
+//     // Every vehicle has a chance of cloning itself according to score
+//     // Argument to "clone" is probability
+//     let newDog = dog.maybeClone(0.1 * v.score / record);
+//     // If there is a child
+//     if (newDog != null) {
+//       population.push(newDog);
+//     }
+//   }
+// }

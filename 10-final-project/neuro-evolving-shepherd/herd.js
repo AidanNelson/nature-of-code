@@ -6,19 +6,18 @@ class Herd {
     this.col = col;
     this.shepherd = shepherd;
     for (let i = 0; i < n; i++) {
-      this.sheep.push(new Sheep(random(width), random(height), this.col));
+      this.sheep.push(new Sheep(random(50, width - 50), random(50, height - 50), this.col));
     }
   }
 
   copy(newShepherd) {
-    return new Herd(this.sheep.length, width / 2, height / 2, this.col, newShepherd);
+    return new Herd(this.sheep.length, this.col, newShepherd);
   }
 
   run() {
     for (let i in this.sheep) {
       this.sheep[i].behaviors(this.sheep, this.shepherd);
       this.sheep[i].update();
-      // this.sheep[i].display();
     }
   }
 
@@ -27,6 +26,7 @@ class Herd {
       this.sheep[i].display();
     }
   }
+
   addSheep(x, y) {
     this.sheep.push(new Sheep(x, y));
   }

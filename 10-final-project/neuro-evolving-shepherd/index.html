@@ -19,8 +19,14 @@
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 
+	<script
+  src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
 </head>
 <body>
+	<input id="myInput" type="file" style="visibility:hidden" onchange="loadPopulationJSON(this.files)" />
 	<script src="sketch.js"></script>
 
 
