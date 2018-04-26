@@ -4,14 +4,15 @@ class Sheep {
     this.vel = createVector(random(-0.5, 0.5), random(-0.5, 0.5));
     this.acc = createVector(0, 0);
 
-    this.maxspeed = 0;
-    this.maxforce = 0;
+    this.maxspeed = 1;
+    this.maxforce = 0.1;
 
     this.currentColor = col;
     this.originalColor = col;
 
-    this.diameter = 10;
+    this.health = 1;
 
+    this.diameter = 10;
     this.debugMode = false;
   }
 
@@ -171,7 +172,7 @@ class Sheep {
 
     // wander around (could be replaced with C Reynolds wander behavior)
     // returns a force that is either current velocity slowed down
-    if (random(1) > 0.99) {
+    if (random(1) > 0.50) {
       let grazeForce = createVector(random(-0.5, 0.5), random(-0.5, 0.5));
       grazeForce.setMag(50);
       return grazeForce;
@@ -248,6 +249,12 @@ class Sheep {
     this.vel.limit(this.maxspeed);
     this.pos.add(this.vel);
     this.acc.mult(0);
+
+    // this.health -= 0.001;
+  }
+
+  isDead() {
+    return this.health < 0;
   }
 
   wrapAround() {

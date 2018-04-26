@@ -94,27 +94,17 @@ function setupSliders() {
     this.graze = 0.01;
     this.stayWithinWalls = 1.0;
     this.cohesion = 1.3;
-    this.separation = 1.5;
+    this.separation = 1.8;
     this.avoidance = 1.3;
     this.alignment = 1.3;
-    this.detectionDistance = 100;
+    this.detectionDistance = 150;
     this.nNeighbors = 25;
   };
 
-
-  //
-  // function shepherdControls() {
-  //   this.strayDistance = 130;
-  //   this.crouchDistance = 50;
-  //   this.driveDistance = 80;
-  //   this.collectDistance = 80;
-  //   this.avoidFlock = 0.1;
-  // };
-
   function systemControls() {
     this.simulationSpeed = 1;
-    this.generationLength = 250;
-    this.populationSize = 25;
+    this.generationLength = 300;
+    this.populationSize = 50;
     this.debugMode = false;
     this.gcmInput = "absolute";
     this.fitnessFunction = "distance";
@@ -185,14 +175,10 @@ function setupSliders() {
   gui.add(sys, 'simulationSpeed', 1, 1000).listen();
   gui.add(sys, 'generationLength', 50, 1000, 25).listen();
   gui.add(sys, 'populationSize', 1, 100).listen();
-  gui.add(sys, 'fitnessFunction', ['distance', 'circle']).listen();
-  gui.add(sys, 'gcmInput', ['relative', 'absolute']).listen();
+  // gui.add(sys, 'fitnessFunction', ['distance', 'circle']).listen();
+  // gui.add(sys, 'gcmInput', ['relative', 'absolute']).listen();
   gui.add(sys, 'debugMode').listen();
   gui.add(sys, 'savePopulation').listen();
   gui.add(sys, 'loadPopulation').listen();
 
 }
-
-// function updatePopulation() {
-//   console.log('update pop');
-// }

@@ -5,8 +5,12 @@ class Herd {
     this.sheep = [];
     this.col = col;
     this.shepherd = shepherd;
+
+    let positionX = random(50, width - 50);
+    let positionY = random(50, height - 50);
+
     for (let i = 0; i < n; i++) {
-      this.sheep.push(new Sheep(random(50, width - 50), random(50, height - 50), this.col));
+      this.sheep.push(new Sheep(positionX, positionY, this.col));
     }
   }
 
@@ -15,9 +19,12 @@ class Herd {
   }
 
   run() {
-    for (let i in this.sheep) {
+    for (let i = this.sheep.length - 1; i >= 0; i--) {
       this.sheep[i].behaviors(this.sheep, this.shepherd);
       this.sheep[i].update();
+      if (this.sheep[i].isDead()) {
+        this.sheep.splice(i, 1);
+      }
     }
   }
 
@@ -25,6 +32,10 @@ class Herd {
     for (let i in this.sheep) {
       this.sheep[i].display();
     }
+  }
+
+  isDead() {
+    return this.sheep.length <= 0;
   }
 
   addSheep(x, y) {

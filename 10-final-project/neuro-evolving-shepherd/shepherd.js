@@ -19,20 +19,17 @@ class Shepherd {
     this.maxspeed = 2;
     this.maxforce = 0.1;
 
-    this.fitness = -1;
-
-    // this.health = 1;
-    // this.score = 0;
+    this.fitness = 1;
 
     this.col = col;
-    this.herd = new Herd(1, this.col, this); // herd of 1 sheep
+    this.herd = new Herd(4, this.col, this); // herd of 1 sheep
 
-    let inputSize = this.herd.sheep.length * 2; // x,y for each sheep
+    let inputSize = 6 + this.herd.sheep.length * 2; // x,y for each sheep
 
     if (brain) {
       this.brain = brain.copy();
     } else {
-      this.brain = new NeuralNetwork(6, 32, 2);
+      this.brain = new NeuralNetwork(inputSize, 32, 2);
     }
   }
 
@@ -40,19 +37,8 @@ class Shepherd {
   run() {
     this.think();
     this.update();
-
     this.herd.run(this);
-
-    // this.health -= 0.005;
-
     this.fitness += this.getFitness();
-
-    // let gcm = this.herd.getGCM();
-    // let d = p5.Vector.dist(this.pos, gcm);
-    // if (d < 100) {
-    //   this.score++;
-    //   this.health + 1;
-    // }
   }
 
   show() {
@@ -61,7 +47,7 @@ class Shepherd {
   }
 
   isDead() {
-    return this.health < 0;
+    return this.herd.isDead();
   }
 
   clone() {
@@ -71,32 +57,28 @@ class Shepherd {
     return new Shepherd(c, newBrain);
   }
 
-  // Make a copy of this vehicle according to probability
-  maybeClone(prob) {
-    // Pick a random number
-    let r = random(1);
-    if (r < prob) {
-      // New vehicle with brain copy
-      return new Vehicle(this.brain);
-    }
-    // otherwise will return undefined
-  }
-
   getFitness() {
     let gcm = this.herd.getGCM();
+    let total = 0;
 
-    if (sys.fitnessFunction == "distance") {
-      // console.log('distance fitnessFunction');
-      return p5.Vector.dist(this.pos, gcm);
-    } else if (sys.fitnessFunction == "circle") {
-      // console.log('circle fitnessFunction');
-      let d = p5.Vector.dist(this.pos, gcm);
-      if (d < 25) {
-        return 10;
-      } else {
-        return -10;
-      }
+    for (let i = 0; i < this.herd.sheep.length; i++) {
+      total += p5.Vector.dist(this.herd.sheep[i].pos, gcm);
     }
+
+    return 1 / total;
+
+    // if (sys.fitnessFunction == "distance") {
+    //   // console.log('distance fitnessFunction');
+    //   return p5.Vector.dist(this.pos, gcm);
+    // } else if (sys.fitnessFunction == "circle") {
+    //   // console.log('circle fitnessFunction');
+    //   let d = p5.Vector.dist(this.pos, gcm);
+    //   if (d < 100) {
+    //     return 10;
+    //   } else {
+    //     return 0;
+    //   }
+    // }
 
     // let totalDist = 0;
     //
@@ -113,25 +95,30 @@ class Shepherd {
     let inputArray = [];
     let gcm = this.herd.getGCM();
 
-    inputArray[0] = (constrain(map(this.pos.x, 0, width, 0, 1), 0, 1));
-    inputArray[1] = (constrain(map(this.pos.y, 0, height, 0, 1), 0, 1));
 
-    inputArray[2] = (constrain(map(this.vel.x / this.maxspeed, -this.maxspeed, this.maxspeed, 0, 1), 0, 1));
-    inputArray[3] = (constrain(map(this.vel.y / this.maxspeed, -this.maxspeed, this.maxspeed, 0, 1), 0, 1));
+    // first input current position:
+    inputArray.push(constrain(map(this.pos.x, 0, width, 0, 1), 0, 1));
+    inputArray.push(constrain(map(this.pos.y, 0, height, 0, 1), 0, 1));
 
-    if (sys.gcmInput == "relative") {
-      let relativeGCM = p5.Vector.sub(gcm, this.pos);
-      inputArray[4] = (constrain(map(gcm.x, 0, width, 0, 1), 0, 1));
-      inputArray[5] = (constrain(map(gcm.y, 0, height, 0, 1), 0, 1));
-    } else if (sys.gcmInput == "absolute") {
-      inputArray[4] = (constrain(map(gcm.x, 0, width, 0, 1), 0, 1));
-      inputArray[5] = (constrain(map(gcm.y, 0, height, 0, 1), 0, 1));
+    // add current velocity
+    inputArray.push(constrain(map(this.vel.x / this.maxspeed, -this.maxspeed, this.maxspeed, 0, 1), 0, 1));
+    inputArray.push(constrain(map(this.vel.y / this.maxspeed, -this.maxspeed, this.maxspeed, 0, 1), 0, 1));
+
+    // if (sys.gcmInput == "relative") {
+    //   let relativeGCM = p5.Vector.sub(gcm, this.pos);
+    //   inputArray.push(constrain(map(gcm.x, 0, width, 0, 1), 0, 1));
+    //   inputArray.push(constrain(map(gcm.y, 0, height, 0, 1), 0, 1));
+    // } else if (sys.gcmInput == "absolute") {
+
+    // add GCM position
+    inputArray.push(constrain(map(gcm.x, 0, width, 0, 1), 0, 1));
+    inputArray.push(constrain(map(gcm.y, 0, height, 0, 1), 0, 1));
+
+    // add position of each sheep
+    for (let i = 0; i < this.herd.sheep.length; i++) {
+      inputArray.push(map(this.herd.sheep[i].pos.x, 0, width, 0, 1));
+      inputArray.push(map(this.herd.sheep[i].pos.y, 0, height, 0, 1));
     }
-
-    // for (let i = 0; i < this.herd.sheep.length; i++) {
-    //   inputArray.push(map(this.herd.sheep[i].pos.x, 0, width, 0, 1));
-    //   inputArray.push(map(this.herd.sheep[i].pos.y, 0, height, 0, 1));
-    // }
 
 
     let outputs = this.brain.predict(inputArray);

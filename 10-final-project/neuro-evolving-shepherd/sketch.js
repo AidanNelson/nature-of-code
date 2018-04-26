@@ -1,9 +1,23 @@
+/*
+Neuro-evolving Sheep-Herding Behaviors
+April, 2018 - Aidan Nelson
+for Nature of Code course at NYU / ITP
+
+with code from...
+Dan Shiffman's Toy NN and examples:
+
+*/
+
+///////////////////////////////////////////////////////////////////////////////
 let population = [];
-let generationNumber = 0
+let generationNumber = 1;
 let cyclesSinceLastGeneration = 0;
 
 setupSliders();
 
+
+
+///////////////////////////////////////////////////////////////////////////////
 function setup() {
   createCanvas(windowWidth - 50, windowHeight - 50);
 
@@ -16,11 +30,11 @@ function setup() {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 function draw() {
   background(30);
   drawGenerationNumber();
-
 
   for (let c = 0; c < sys.simulationSpeed; c++) {
     for (let i = population.length - 1; i >= 0; i--) {
@@ -36,52 +50,65 @@ function draw() {
     cyclesSinceLastGeneration++;
   }
 
-  displayPopulation();
+  displayBestSheep();
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////
 function drawGenerationNumber() {
-  if (sys.debugMode) {
-    textSize(22);
-    textAlign(LEFT);
-    fill(255);
-    let info = 'generation:' + generationNumber;
-    text(info, 25, 50);
-  }
+  // if (sys.debugMode) {
+  textSize(18);
+  textAlign(LEFT);
+  fill(255);
+  let info = "Larger triangles are 'shepherding dogs' and are evolving to stay close to their (smaller triangle) flocks.";
+  text(info, 25, 50);
+  info = 'generation:' + generationNumber;
+  text(info, 25, 80);
+  // }
 }
 
-function displayPopulation() {
-  for (let i = 0; i < population.length; i++) {
-    population[i].show();
-    // in debug mode, show gcm of herd of sheep under mouse
-    if (sys.debugMode) {
-      let p1 = population[i].pos;
-      let p2 = population[i].herd.getGCM();
-      stroke(255, 255, 255, 100);
-      strokeWeight(1);
-      line(p1.x, p1.y, p2.x, p2.y);
-      // if (mouseIsPressed) {
-      //   let d = dist(mouseX, mouseY, population[i].pos.x, population[i].pos.y);
-      //   if (d < 30) {
-      //     fill(255, 255, 255, 100);
-      //     stroke(0);
-      //     let gcm = population[i].herd.getGCM();
-      //     ellipse(gcm.x, gcm.y, 30, 30);
-      //   }
-      // }
+
+///////////////////////////////////////////////////////////////////////////////
+function displayBestSheep() {
+  population[0].show();
+  if (sys.debugMode) {
+    for (let i = 0; i < population.length; i++) {
+      population[i].show();
+      // in debug mode, show gcm of herd of sheep under mouse
+
+      // let p1 = population[i].pos;
+      // let p2 = population[i].herd.getGCM();
+      // stroke(255, 255, 255, 100);
+      // strokeWeight(1);
+      // line(p1.x, p1.y, p2.x, p2.y);
     }
   }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
 function nextGeneration() {
   generationNumber++;
+
+  // sort by fitness
   population.sort((a, b) => {
-    if (a.fitness < b.fitness) {
+    if (a.fitness > b.fitness) {
       return -1;
     } else {
       return 1;
     }
   });
+
+
+  // reverse sort!
+  // population.sort((a, b) => {
+  //   if (a.fitness < b.fitness) {
+  //     return -1;
+  //   } else {
+  //     return 1;
+  //   }
+  // });
 
   let nextGeneration = [];
   let matingPool = [];
@@ -96,8 +123,8 @@ function nextGeneration() {
   // console.log('avg fitness:', total / population.length);
 
   for (let i = 0; i < population.length; i++) {
-    let fitnessNormal = map(population[i].fitness, 0, minFitness, 1, 0);
-    // console.log(fitnessNormal);
+    // let fitnessNormal = map(population[i].fitness, 0, minFitness, 1, 0); // REVERSED
+    let fitnessNormal = map(population[i].fitness, 0, maxFitness, 0, 1);
     let n = floor(fitnessNormal * 100); // Arbitrary multiplier
 
     for (let j = 0; j < n; j++) {
@@ -105,32 +132,11 @@ function nextGeneration() {
     }
   }
 
-
-
   for (let i = 0; i < sys.populationSize; i++) {
     let parent = matingPool[floor(random(matingPool.length))];
     nextGeneration.push(parent.clone());
   }
+
   console.log('Generation: ', generationNumber);
   population = nextGeneration;
 }
-
-
-
-
-
-
-
-
-
-// if (population.length < 20) {
-//   for (let dog of population) {
-//     // Every vehicle has a chance of cloning itself according to score
-//     // Argument to "clone" is probability
-//     let newDog = dog.maybeClone(0.1 * v.score / record);
-//     // If there is a child
-//     if (newDog != null) {
-//       population.push(newDog);
-//     }
-//   }
-// }
