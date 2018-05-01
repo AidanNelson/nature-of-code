@@ -1,0 +1,37 @@
+Herding Behavior as modeled in “Solving the shepherding problem: heuristics for herding autonomous, interacting agents”
+
+Sheep:
+  w/r/t Shepherd:
+    - if shepherd is at a greater distance than X, sheep will pay it no mind whatsoever, but continue with grazing activities
+    - if shepherd is within Y distance, this sheep will move toward local center of mass (LCM) of its N nearest neighbors AND will be repelled directly away from shepherd
+
+  w/r/t other sheep:
+    - if another sheep is within this sheep's personal space, it will move away
+    -
+
+Shepherd:
+    - if this shepherd is within X distance from a sheep, it will not move (AKA it keeps some distance)
+    - if all sheep are within a certain distance from their global center of mass (GCM - center of flock), then shepherd will assume DRIVING position / Behavior
+    - if >0 sheep is > f(N) from GCM, then shepherd will assume COLLECTING position / behavior directly behind this sheep w/r/t GCM of flock
+
+
+
+Meeting w/ Dan 2/27
+
+Shepherd Logic:
+    - Re: erratic shepherd behavior: have shepherd maintain a currentSheep variable or list to hold those sheep which need to be collected.  this could be stored in some ordered list -- either by distance from the center of the pack (priority furthest to closest) OR distance from the shepherd (priority closest to furthest).
+
+    - Re: shepherd going through center of flock and splitting flock: either have shepherd avoid GCM of flock OR have sheep use obstacle avoidance to avoid center of flock OR have shepherd create bounding blob shape around flock, and always remain outside of blob.
+
+
+Sheep:
+    - Re: erratic looking behavior: this may be due in part to the use of triangles to display behavior, which shows somewhat more erratic changes in heading than is necessarily representative of actual movement.  Maybe consider not using these triangles.
+    - Re: sheep piling on top of one another: increase separation value
+
+
+
+
+TODO:
+
+    - what if dog dynamically adjusted stray distance to compensate for number of sheep and number of straying sheep?  AKA if there were more straying sheep, it would try to gather the furthest first, then move them smaller.  Is this the same as adjusting for furthest sheep first?
+    

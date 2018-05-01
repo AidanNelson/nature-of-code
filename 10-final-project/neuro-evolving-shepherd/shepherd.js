@@ -65,6 +65,8 @@ class Shepherd {
       total += p5.Vector.dist(this.herd.sheep[i].pos, gcm);
     }
 
+    console.log('total dist: ', total);
+    console.log('fitness: ', 1 / total);
     return 1 / total;
 
     // if (sys.fitnessFunction == "distance") {
